@@ -1,0 +1,554 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>FiskarBWD Portfolio Page</title>
+    <link rel="stylesheet" href="bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Cabin|Passion+One" rel="stylesheet">
+    <script src="jquery-1.10.2.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+
+    <style>
+        body {
+            background-image: url('./images/bkground.jpg');
+            background-color: #bebebe;
+            background-position: top left;
+            background-size: 100%;
+			background-repeat: no-repeat;
+        }
+
+        /*.row {
+            margin-left: 0px;
+            margin-right: 0px;
+        }*/
+        .menuTitle {
+            padding-top: 5px;
+            padding-left: 15px;
+            margin: 0px;
+            font-family: 'Passion One', Arial, sans-serif;
+            font-size: 30px;
+            font-weight: normal;
+            color: white;
+        }
+
+        .firstRow {
+            padding-top: 60px;
+        }
+
+        .sectionTitle {
+            font-family: 'Passion One', Arial, sans-serif;
+            font-size: 30px;
+            font-weight: normal;
+            color: black;
+            margin:0px;
+            margin-bottom:10px;
+        }
+
+        .sectionTitleRowGray {
+            background: -webkit-linear-gradient(rgba(100,100,100,0), rgba(100,100,100,0), rgba(100,100,100,.75), rgba(100,100,100,.75)); /* For Safari 5.1 to 6.0 */
+            background: -o-linear-gradient(rgba(100,100,100,0), rgba(100,100,100,0), rgba(100,100,100,.75), rgba(100,100,100,.75)); /* For Opera 11.1 to 12.0 */
+            background: -moz-linear-gradient(rgba(100,100,100,0), rgba(100,100,100,0), rgba(100,100,100,.75), rgba(100,100,100,.75)); /* For Firefox 3.6 to 15 */
+            background: linear-gradient(rgba(100,100,100,0), rgba(100,100,100,0), rgba(100,100,100,.75), rgba(100,100,100,.75)); /* Standard syntax */
+        }
+
+        .sectionTitleBackgroundGray {
+            display:inline-block;
+            padding-top: 20px;
+            padding-bottom: 10px;
+            padding-left: 50px;
+            padding-right: 50px;
+            margin-bottom: 0px;
+            background: -webkit-radial-gradient(rgba(100,100,100,0.75) 20%, rgba(100,100,100,0) 60%, rgba(100,100,100,0) 80%); /* Safari 5.1 to 6.0 */
+            background: -o-radial-gradient(rgba(100,100,100,0.75) 20%, rgba(100,100,100,0) 60%, rgba(100,100,100,0) 80%); /* For Opera 11.6 to 12.0 */
+            background: -moz-radial-gradient(rgba(100,100,100,0.75) 20%, rgba(100,100,100,0) 60%, rgba(100,100,100,0) 80%); /* For Firefox 3.6 to 15 */
+            background: radial-gradient(rgba(100,100,100,0.75) 20%, rgba(100,100,100,0) 60%, rgba(100,100,100,0) 80%); /* Standard syntax */
+        }
+
+        .sectionTitleRowLtGray {
+            background: -webkit-linear-gradient(rgba(100,100,100,0.75), rgba(100,100,100,0.75), rgba(190,190,190,.75), rgba(190,190,190,.75)); /* For Safari 5.1 to 6.0 */
+            background: -o-linear-gradient(rgba(100,100,100,0.75), rgba(100,100,100,0.75), rgba(190,190,190,.75), rgba(190,190,190,.75)); /* For Opera 11.1 to 12.0 */
+            background: -moz-linear-gradient(rgba(100,100,100,0.75), rgba(100,100,100,0.75), rgba(190,190,190,.75), rgba(190,190,190,.75)); /* For Firefox 3.6 to 15 */
+            background: linear-gradient(rgba(100,100,100,0.75), rgba(100,100,100,0.75), rgba(190,190,190,.75), rgba(190,190,190,.75)); /* Standard syntax */
+        }
+
+        .sectionTitleBackgroundLtGray {
+            display:inline-block;
+            padding-top: 20px;
+            padding-bottom: 10px;
+            padding-left: 50px;
+            padding-right: 50px;
+            margin-bottom: 0px;
+            background: -webkit-radial-gradient(rgba(190,190,190,0.75) 20%, rgba(190,190,190,0) 60%, rgba(190,190,190,0) 80%); /* Safari 5.1 to 6.0 */
+            background: -o-radial-gradient(rgba(190,190,190,0.75) 20%, rgba(190,190,190,0) 60%, rgba(190,190,190,0) 80%); /* For Opera 11.6 to 12.0 */
+            background: -moz-radial-gradient(rgba(190,190,190,0.75) 20%, rgba(190,190,190,0) 60%, rgba(190,190,190,0) 80%); /* For Firefox 3.6 to 15 */
+            background: radial-gradient(rgba(190,190,190,0.75) 20%, rgba(190,190,190,0) 60%, rgba(190,190,190,0) 80%); /* Standard syntax */
+        }
+
+        .gradientStop {
+            height: 1px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .gradientStopGray {
+            height: 1px;
+            width: 100%;
+            overflow: hidden;
+            background-color: rgba(100,100,100,0.75);
+        }
+
+        .sectionGray {
+            background-color: rgba(100,100,100,0.75);
+        }
+
+        .sectionLtGray {
+            background-color: rgba(190,190,190,0.75);
+        }
+
+        .sectionText {
+            font-family: 'Cabin', sans-serif;
+            font-size: 18px;
+            color: black;
+            margin:0px;
+            padding-bottom:10px;
+        }
+
+        .centeredUl {
+            display: table; 
+            text-align: left; 
+            margin: 0 auto;
+        }
+
+        .sectionLi {
+            font-family: 'Cabin', sans-serif;
+            font-size: 18px;
+            color: black;
+        }
+
+        .projDiv {
+            display: block;
+            position: relative;
+            width: 100%;
+            height: auto;
+            padding: 0px;
+            margin: 0px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .projImg {
+            width: 100%;
+            border: 2px solid rgba(60, 60, 60, 1.0);
+            border-radius: 10px;
+        }
+
+        .projInfo {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            padding: 0px;
+            padding-top: 50px;
+            padding-bottom: 50px;
+            margin: 0px;
+            background-color: rgba(40, 40, 40, 0.75);
+            border: 2px solid rgba(60, 60, 60, 1.0);
+            border-radius: 10px;
+            /*visibility: hidden;*/
+        }
+
+        .projInfoScroller {
+            height: 100%;
+            overflow: auto;
+            margin: 0px;
+            padding: 0px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .projInfoTitle {
+            font-family: 'Passion One', Arial, sans-serif;
+            font-size: 25px;
+            color: white;
+            margin: 0px;
+            margin-bottom: 10px;
+        }
+
+        .projInfoText {
+            font-family: 'Cabin', sans-serif;
+            font-size: 16px;
+            color: white;
+            margin:0px;
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .projAnc {
+            position: absolute;
+            height: 40px;
+            width: 80px;
+            background: rgba(40, 40, 40, 0.5);
+            font-family: 'Cabin', sans-serif;
+            font-size: 25px;
+            font-weight: bold;
+            margin:0px;
+            padding: 0px;
+            padding-top:1px;
+            border: 2px solid rgba(60, 60, 60, 1.0);
+        }
+
+        .projAnc:link {
+            color: white;
+            text-decoration: none;
+        }
+        .projAnc:active {
+            color: white;
+            text-decoration: none;
+        }
+        .projAnc:visited {
+            color: white;
+            text-decoration: none;
+        }
+        .projAnc:hover {
+            color: white;
+            text-decoration: none;
+        }
+
+        .projAncInfo {
+            left:0;
+            top:0;
+            border-bottom-right-radius: 10px;
+            border-top-left-radius: 10px;
+        }
+
+        .projAncCode {
+            left:0;
+            bottom:0;
+            border-bottom-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .projAncView {
+            right:0;
+            bottom:0;
+            border-bottom-right-radius: 10px;
+            border-top-left-radius: 10px;
+        }
+
+/*         .footerText {
+            color: white;
+            margin: 0px;
+            padding: 0px;
+            padding-top:13px;
+            padding-left:12px;
+            font-size:10px;
+        }
+
+       #linkedInIcon {
+            margin: 0px;
+            padding: 0px;
+            width: 33px;
+            height: 33px;
+            background-color: transparent;
+            background-image: url('./images/iconLinkedIn.png');
+            background-position: top left;
+            background-size: 100% 100%;
+			background-repeat: no-repeat;
+        }
+
+        #gitHubIcon {
+            margin: 0px;
+            padding: 0px;
+            width: 33px;
+            height: 33px;
+            background-color: transparent;
+            background-image: url('./images/iconGitHub.png');
+            background-position: top left;
+            background-size: 100% 100%;
+			background-repeat: no-repeat;
+        }
+
+        .socialMediaLink:link {
+            padding: 0px;
+            margin:0px;
+            display: block;
+            border: 2px solid #222;
+        }
+
+        .socialMediaLink:visited {
+            padding: 0px;
+            margin:0px;
+            display: block;
+            border: 2px solid #222;
+        }
+
+        .socialMediaLink:hover {
+            padding: 0px;
+            margin:0px;
+            display: block;
+            border: 2px solid white;
+            border-radius: 16px;
+        }
+
+        .socialMediaLink:active {
+            padding: 0px;
+            margin:0px;
+            display: block;
+            border: 2px solid #222;
+        }*/
+
+        .footer {
+            min-height: 30px;
+            height: 30px;
+            padding-top:9px;
+        }
+
+        .footer-text {
+            margin: 0;
+            padding: 0;
+            font-size:12px;
+            padding: 0px;
+            color: gray;
+        }
+    </style>
+
+    <script>
+        var gbProjectsFaded = false;
+
+        $(function () {
+            $(".projInfo").hide();
+
+            $(".projAncInfo").click(function (evt) {
+                evt.preventDefault();
+                var sInfoDivName = "projInfoDiv" + evt.target.id.substr(-2, 2);
+                if ($("#" + sInfoDivName).is(":visible")) {
+                    $("#" + sInfoDivName).fadeOut();
+                } else {
+                    $("#" + sInfoDivName).fadeIn();
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="overflow: hidden;">
+        <div class="container-fluid">
+            <!-- App Logo -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <p class="menuTitle">Brian Denton</p>
+            </div>
+
+            <div class="collapse navbar-collapse" id="mainNavBar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#rowAbout">About</a></li>
+                    <li><a href="#rowProjects">Projects</a></li>
+                    <li><a href="#rowContact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <a name="rowAbout"></a>
+        <div class="row-fluid firstRow">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div id="divAboutMe">
+                    <h1 class="sectionTitle text-center">About</h1>
+                    <p class="sectionText">I am a coder, developer, and technical writer located in the Santa Cruz, California area.  Recently I finished my Front End Web Development cirtificate with FreeCodeCamp.  I am seeking a challenging position where I can apply my skills in software development and/or technical writing.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <h2 class="sectionTitle text-center">Programming</h2>
+                <ul class="centeredUl">
+                    <li class="sectionLi">HTLM5/CSS3</li>
+                    <li class="sectionLi">JavaScript</li>
+                    <li class="sectionLi">JQuery</li>
+                    <li class="sectionLi">Bootstrap</li>
+                    <li class="sectionLi">C#</li>
+                    <li class="sectionLi">NodeJS/Express</li>
+                    <li class="sectionLi">MongoDB/Mongoose</li>
+                    <li class="sectionLi">Java</li>
+                </ul>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <h2 class="sectionTitle text-center">Tools</h2>
+                <ul class="centeredUl">
+                    <li class="sectionLi">MS Visiual Studio</li>
+                    <li class="sectionLi">Eclipse</li>
+                    <li class="sectionLi">XCode</li>
+                    <li class="sectionLi">Adobe Photoshop</li>
+                    <li class="sectionLi">GIMP</li>
+                    <li class="sectionLi">Blender</li>
+                    <li class="sectionLi">MS Word/Excel<a name="rowProjects"></a></li>
+                    <li class="sectionLi">Madcap Flare</li>
+                    <li class="sectionLi">Unity (game engine)</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="gradientStop">&nbsp;</div>
+        <div class="row-fluid sectionTitleRowGray">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="text-center">
+                    <h1 class="sectionTitle sectionTitleBackgroundGray">Projects</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid sectionGray" id="divProjects">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <p class="sectionText">Most of the following projects I completed for FreeCodeCamp.  The <b>Code</b> links will open the project in CodePen.io, where the source can be viewed (it is split into three sections: body HTML, CSS, and JavaScript).  The <b>View</b> links will show each page in the entire browser tab.</p>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 sectionGray">
+                <div class="projDiv">
+                    <img class="projImg" src="./images/SimonThumb.png" alt="Simon Game Thumb" />
+                    <div class="projInfo" id="projInfoDiv01">
+                        <div class="projInfoScroller">
+                            <h3 class="projInfoTitle text-center">Simon Game</h3>
+                            <p class="projInfoText">JavaScript/HTML5 implementation of classic 80's electronic memory game.  Uses Canvas to draw and animate the four main buttons used to play the game.  JQuery used to access and manipulate DOM.</p>
+                        </div>
+                    </div>
+                    <a class="projAnc projAncInfo text-center" id="projInfoAnc01" href="#">Info</a>
+                    <a class="projAnc projAncCode text-center" href="https://codepen.io/FiskarBWD/pen/qPEXmm" target="_blank">Code</a>
+                    <a class="projAnc projAncView text-center" href="https://codepen.io/FiskarBWD/full/qPEXmm" target="_blank">View</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 sectionGray">
+                <div class="projDiv">
+                    <img class="projImg" src="./images/ticTacToadThumb.png" alt="Tic-Tac-Toad Thumb" />
+                    <div class="projInfo" id="projInfoDiv02">
+                        <div class="projInfoScroller">
+                            <h3 class="projInfoTitle text-center">Tic-Tac-Toad Game</h3>
+                            <p class="projInfoText">Tic-tac-toe project for FreeCodeCamp, but with colored toads.  Customize the colors on your toad and play against the computer or another person in the same room.  First time I used HTML5 Canvas element.</p>
+                        </div>
+                    </div>
+                    <a class="projAnc projAncInfo text-center" id="projInfoAnc02" href="#">Info</a>
+                    <a class="projAnc projAncCode text-center" href="https://codepen.io/FiskarBWD/pen/BdeqwV/" target="_blank">Code</a>
+                    <a class="projAnc projAncView text-center" href="https://codepen.io/FiskarBWD/full/BdeqwV/" target="_blank">View</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 sectionGray">
+                <div class="projDiv">
+                    <img class="projImg" src="./images/pomodoroThumb.png" alt="Pomodoro Timer Thumb" />
+                    <div class="projInfo" id="projInfoDiv03">
+                        <div class="projInfoScroller">
+                            <h3 class="projInfoTitle text-center">Pomodoro Timer</h3>
+                            <p class="projInfoText">Pomodoro Timer project for FreeCodeCamp.  User sets duration of session and break, then starts timer.  Timer counts down for current time period, then repeats for the next, switching between the two.  Implemented using JavaScript timers, JQuery, and some of the newer CSS3 properties (box shadow and border radius).</p>
+                        </div>
+                    </div>
+                    <a class="projAnc projAncInfo text-center" id="projInfoAnc03" href="#">Info</a>
+                    <a class="projAnc projAncCode text-center" href="https://codepen.io/FiskarBWD/pen/ZJvdgZ/" target="_blank">Code</a>
+                    <a class="projAnc projAncView text-center" href="https://codepen.io/FiskarBWD/full/ZJvdgZ/" target="_blank">View</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 sectionGray">
+                <div class="projDiv">
+                    <img class="projImg" src="./images/calculatorThumb.png" alt="Calculator Thumb" />
+                    <div class="projInfo" id="projInfoDiv04">
+                        <div class="projInfoScroller">
+                            <h3 class="projInfoTitle text-center">Calculator</h3>
+                            <p class="projInfoText">Calculator project for FreeCodeCamp.  Uses Model–View–Controller (MVC) pattern to allow new buttons to be added with ease.  Coded separate JavaScript class for model, view, and controller.</p>
+                        </div>
+                    </div>
+                    <a class="projAnc projAncInfo text-center" id="projInfoAnc04" href="#">Info</a>
+                    <a class="projAnc projAncCode text-center" href="https://codepen.io/FiskarBWD/pen/QMMJEz/" target="_blank">Code</a>
+                    <a class="projAnc projAncView text-center" href="https://codepen.io/FiskarBWD/full/QMMJEz/" target="_blank">View</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row-fluid sectionGray">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 sectionGray">
+                <div class="projDiv">
+                    <img class="projImg" src="./images/twitchThumb.png" alt="Twitch Monitor Thumb" />
+                    <div class="projInfo" id="projInfoDiv05">
+                        <div class="projInfoScroller">
+                            <h3 class="projInfoTitle text-center">Twitch Monitor</h3>
+                            <p class="projInfoText">Twitch is a live streaming videa site specializing in video game related content.  The Twitch Monitor project displays a list of twitch channels and their current status.  Clicking on a channel entry will take the user to the Twitch page for that channel.  User may also search for a channel, which adds an entry to the list.</p>
+                            <p class="projInfoText">Implemented this project using Twitch Web API to search for and get status of Twitch channels.  Used JQuery funtions to perform AJAX calls to Twitch API, then converted JSON response to render channel entry on page.</p>
+                        </div>
+                    </div>
+                    <a class="projAnc projAncInfo text-center" id="projInfoAnc05" href="#">Info</a>
+                    <a class="projAnc projAncCode text-center" href="https://codepen.io/FiskarBWD/pen/wqKVMB" target="_blank">Code</a>
+                    <a class="projAnc projAncView text-center" href="https://codepen.io/FiskarBWD/full/wqKVMB" target="_blank">View</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 sectionGray">
+                <div class="projDiv">
+                    <img class="projImg" src="./images/wikipediaThumb.png" alt="Wikipedia Viewer Thumb" />
+                    <div class="projInfo" id="projInfoDiv06">
+                        <div class="projInfoScroller">
+                            <h3 class="projInfoTitle text-center">Wikipedia Viewer</h3>
+                            <p class="projInfoText">Wikipedia Viewer project for FreeCodeCamp.  User can enter search string and pick from a list of resulting topics, or press the dice icon to get random list of topics.  Click a topic in the list to see Wikipedia page for that topic.</p>
+                            <p class="projInfoText">Uses Wikipedia Web API for search.  API calls made using JQuery functions.  Also uses JQuery animation functions to move elements on page.</p>
+                        </div>
+                    </div>
+                    <a class="projAnc projAncInfo text-center" id="projInfoAnc06" href="#">Info</a>
+                    <a class="projAnc projAncCode text-center" href="https://codepen.io/FiskarBWD/pen/NvWLXM/" target="_blank">Code</a>
+                    <a class="projAnc projAncView text-center" href="https://codepen.io/FiskarBWD/full/NvWLXM/" target="_blank">View</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 sectionGray">
+                <div class="projDiv">
+                    <img class="projImg" src="./images/projTribute.png" alt="Tribute Page Thumb" />
+                    <div class="projInfo" id="projInfoDiv07">
+                        <div class="projInfoScroller">
+                            <h3 class="projInfoTitle text-center">USS Constitution Tribute</h3>
+                            <p class="projInfoText">This is a tribute page for the USS Constitution, one of my first projects for FreeCodeCamp.  This is a static page with no script.</p>
+                        </div>
+                    </div>
+                    <a class="projAnc projAncInfo text-center" id="projInfoAnc07" href="#">Info</a>
+                    <a class="projAnc projAncCode text-center" href="https://codepen.io/FiskarBWD/pen/ybQBxr" target="_blank">Code</a>
+                    <a class="projAnc projAncView text-center" href="https://codepen.io/FiskarBWD/full/ybQBxr" target="_blank">View</a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 sectionGray">
+                <div class="projDiv">
+                    <img class="projImg" src="./images/targetThumb.png" alt="Target Game Thumb" />
+                    <div class="projInfo" id="projInfoDiv08">
+                        <div class="projInfoScroller">
+                            <h3 class="projInfoTitle text-center">Target Game</h3>
+                            <p class="projInfoText">Javascript implementation of old arcade style game.  Based on old game I believe was called Target.  Similar game called Sabotage appeared later on Apple computers.  I could not remember all the original game machanics, so added my own.</p>
+                            <p class="projInfoText">I coded this project many years ago, before Canvas was available.  Uses Sliding Doors technique to animate images in divs, which are moved using absolute positioning and timers.</p>
+                        </div>
+                    </div>
+                    <a class="projAnc projAncInfo text-center" id="projInfoAnc08" href="#">Info</a>
+                    <a class="projAnc projAncCode text-center" href="https://codepen.io/FiskarBWD/pen/VWwmGP" target="_blank">Code</a>
+                    <a class="projAnc projAncView text-center" href="https://codepen.io/FiskarBWD/full/VWwmGP" target="_blank">View</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="gradientStopGray">&nbsp;</div>
+
+    <a name="rowContact"></a>
+    <div class="row-fluid sectionTitleRowLtGray">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="text-center">
+                <h1 class="sectionTitle sectionTitleBackgroundLtGray">Contact</h1>
+            </div>
+        </div>
+    </div>
+    <div class="row-fluid sectionLtGray" id="divProjects">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center" style="padding-bottom:30px;">
+            <p class="sectionText">Email me anytime at <b>argadu@gmail.com</b>.</p>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-inverse navbar-fixed-bottom text-center footer">
+        <p class="footer-text">Coded by Brian Denton.</p>
+    </nav>
+</body>
+</html>
