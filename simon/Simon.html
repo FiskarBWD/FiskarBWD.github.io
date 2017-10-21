@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simon</title>
+    <script src="jquery-1.10.2.min.js"></script>
+    <script src="Constants.js"></script>
+    <script src="SimonView.js"></script>
+    <script src="SimonModel.js"></script>
+    <script src="SimonController.js"></script>
+
+    <script>
+        var g_oSimonController = new SimonController();
+
+        $(function () {
+            g_oSimonController.init();
+        });
+    </script>
+
+    <style>
+        html, body {
+            background-image: url('./images/burl.jpg');
+			background-repeat: repeat;
+            height: 100%;
+            width: 100%;
+            position: relative;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #centerTrans {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            margin: 0px;
+            padding: 0px;
+            width: 370px; 
+            height: 370px;
+            border: 1px solid #202020;
+            border-radius: 185px;
+            text-align: center;
+            box-shadow: 0px 2px 20px black;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            margin: 0px;
+            padding: 0px;
+            background-color: transparent;
+        }
+
+        #ancOnOffSwitch {
+            position: absolute;
+            top: 240px;
+            left: 171px;
+            width: 30px;
+            height: 14px;
+            background-color: transparent;
+            margin: 0px;
+            padding: 1px;
+        }
+
+        #btnStart {
+            position: absolute;
+            top: 187px;
+            left: 178px;
+            width: 18px;
+            height: 18px;
+            background-color: #fe0001;
+            border: 4px solid #494342;
+            border-radius: 13px;
+            margin: 0px;
+            padding: 0px;
+            box-shadow: 0px 2px 5px black;
+        }
+
+        #btnStartPressed {
+            position: absolute;
+            top: 188px;
+            left: 178px;
+            width: 18px;
+            height: 18px;
+            background-color: #fe0001;
+            border: 4px solid #494342;
+            border-radius: 13px;
+            margin: 0px;
+            padding: 0px;
+            box-shadow: none;
+        }
+
+        #btnStrict {
+            position: absolute;
+            top: 187px;
+            left: 220px;
+            width: 18px;
+            height: 18px;
+            background-color: #ffff00;
+            border: 4px solid #494342;
+            border-radius: 13px;
+            margin: 0px;
+            padding: 0px;
+            box-shadow: 0px 2px 5px black;
+        }
+
+        #footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            margin: 0px;
+            padding: 0px;
+            padding-top: 2px;
+            text-align: center;
+            color: white;
+            font-size: 12px;
+            font-family: Arial;
+        }
+    </style>
+</head>
+<body>
+    <div id="centerTrans">
+        <canvas id="mainCanvas" width="370" height="370">
+            Your browser does not support the HTML5 canvas tag.
+        </canvas>
+        <a href="#" id="ancOnOffSwitch" clickID="OnOffSwitch"></a>
+        <a href="#" id="btnStart" clickID="BtnStart"></a>
+        <a href="#" id="btnStrict" clickID="BtnStrict"></a>
+   </div>
+   <div id="footer">
+        <p style="padding:0px; margin:0px;">Coded by Brian Denton</p>
+    </div>
+</body>
+</html>
