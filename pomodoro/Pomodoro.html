@@ -1,0 +1,564 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="bootstrap.min.css" />
+    <script src="jquery-1.10.2.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script src="PomoView.js"></script>
+    <script src="PomoModel.js"></script>
+    <script src="PomoController.js"></script>
+
+    <style>
+        body {
+            background-color: black;
+            margin: 0px;
+            height: 100%;
+        }
+
+        .headerStyle {
+            background-image: url('./images/TMHdrBackground.png');
+            background-position: top left;
+            background-repeat: repeat-x;
+            margin: 0px;
+            padding: 0px;
+            height: 100px;
+        }
+
+        h1 {
+            font-weight: normal;
+            font-size: 60px;
+            color: white;
+            margin: 0;
+            padding: 0;
+            padding-top: 30px;
+        }
+
+        .noMarginPadding {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #centerContainer {
+            margin: 40px auto;
+            padding: 0px;
+            width: 360px;
+        }
+
+        #controlRow {
+            margin: 0px;
+            margin-bottom: 30px;
+            padding: 0px;
+            width: 360px;
+            height: 80px;
+            clear: both;
+        }
+
+        #breakLenDiv {
+            margin: 0px;
+            padding: 0px;
+            width: 165px;
+            height: 80px;
+            float: left;
+            border: solid 4px #1b3e56;
+            border-radius: 40px;
+            box-shadow: 0px 0px 50px white;
+            text-align: center;
+            background-color: #02162d;
+            overflow: hidden;
+        }
+
+        #sessionLenDiv {
+            margin: 0px;
+            padding: 0px;
+            width: 165px;
+            height: 80px;
+            float: right;
+            border: solid 4px #1b3e56;
+            border-radius: 40px;
+            box-shadow: 0px 0px 50px white;
+            text-align: center;
+            background-color: #02162d;
+            overflow: hidden;
+        }
+
+        .controlGroupTitle {
+            margin: 0px;
+            padding: 0px;
+            padding-top: 5px;
+            height: 30px;
+            width: 100%;
+            color: white;
+            font-weight: normal;
+            font-size: 14px;
+        }
+
+        .controlGroupControls {
+            height: 50px;
+            width: 100%;
+            clear: both;
+            font-weight: normal;
+            font-size: 20px;
+        }
+
+        .controlGroupBtn {
+            margin: 0px;
+            padding: 0px;
+            padding-top: 3px;
+            height: 50px;
+            width: 40px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .controlGroupBtn:link {
+            background-color: #02162d;
+            color: white;
+            text-decoration: none;
+        }
+
+        .controlGroupBtn:active {
+            background-color: #02162d;
+            color: #808080;
+            text-decoration: none;
+        }
+
+        .controlGroupBtn:visited {
+            background-color: #02162d;
+            color: white;
+            text-decoration: none;
+        }
+
+        .controlGroupBtn:hover {
+            background-color: #12263d;
+            color: white;
+            text-decoration: none;
+        }
+
+        .controlGroupLeftBtn {
+            float: left;
+            border-top: solid 2px #1b3e56;
+            border-right: solid 2px #1b3e56;
+            border-top-right-radius: 10px;
+        }
+
+        .controlGroupTimeLbl {
+            margin: 0px;
+            padding: 0px;
+            padding-top: 10px;
+            height: 50px;
+            width: 76px;
+            float: left;
+            color: white;
+        }
+
+        .controlGroupRightBtn {
+            float: right;
+            border-top: solid 2px #1b3e56;
+            border-left: solid 2px #1b3e56;
+            border-top-left-radius: 10px;
+        }
+
+        #timerDiskOuter {
+            margin: 0px;
+            padding: 0px;
+            width: 360px;
+            height: 360px;
+            border: solid 4px #1b3e56;
+            border-radius: 180px;
+            overflow: hidden;
+            box-shadow: 0px 0px 50px white;
+        }
+
+        #timerDiskInner {
+            margin: 0px;
+            padding: 0px;
+            position: relative;
+            width: 352px;
+            height: 352px;
+            border: solid 4px black;
+            border-radius: 176px;
+            overflow: hidden;
+            background-color: #02162d;
+        }
+
+        #timerDiskFiller {
+            margin: 0px;
+            padding: 0px;
+            padding-top: 50px;
+            width: 344px;
+            height: 344px;
+            position: absolute;
+            left: 0px;
+            top: 348px;
+            background-color: #1b3e56;
+        }
+
+        #timerDiskTextContainer {
+            margin: 0px;
+            padding: 0px;
+            padding-top: 50px;
+            width: 344px;
+            height: 344px;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            text-align: center;
+        }
+
+        #timerDiskClickTarget {
+            margin: 0px;
+            padding: 0px;
+            width: 344px;
+            height: 344px;
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            text-decoration: none;
+        }
+
+        #timerDiskTextSmall {
+            margin: 0px;
+            padding: 0px;
+            color: white;
+            font-weight: normal;
+            font-size: 30px;
+        }
+
+        #timerDiskTextMedium {
+            margin: 0px;
+            margin-bottom: 20px;
+            padding: 0px;
+            color: white;
+            font-weight: normal;
+            font-size: 40px;
+        }
+
+        #timerDiskTextLarge {
+            margin: 0px;
+            margin-bottom: 25px;
+            padding: 0px;
+            color: white;
+            font-weight: normal;
+            font-size: 60px;
+        }
+
+        .footerStyle {
+            margin: 0px;
+            padding: 0px;
+            padding-top: 80px;
+            height: 100px;
+            background-image: url('./images/TMFtrBackground.png');
+            background-position: bottom left;
+            background-repeat: repeat-x;
+        }
+
+        .footer-text {
+            margin: 0;
+            padding: 0px;
+            color: gray;
+        }
+    </style>
+
+    <script>
+/*
+        //***************************************************************************
+        // Class:       PomoView
+        // Description: Handles Pomodoro Timer UI.  Sets up jquery event handlers for   
+        //              click events, and provides methods for updating UI.  When a 
+        //              item is clicked, the click handler extracts the 'clickID' 
+        //              attribute from the event target (all clickable HTML elements
+        //              must have this attribute assigned), and passes it as a param
+        //              to the m_fnBtnClickCallback function provided when the 
+        //              instance was created.
+        //***************************************************************************
+        var PomoView = function (fnBtnClickCallback) {
+            // Private Vars
+            var m_fnBtnClickCallback = fnBtnClickCallback;
+
+            function padLeft(sTarget, nMinLen, sPadChar) {
+                var sStr = sTarget || "";
+
+                while (sStr.length < nMinLen) {
+                    sStr = sPadChar + sStr;
+                }
+
+                return sStr;
+            }
+
+            //Public Methods
+            this.init = function () {
+                $(".controlGroupLeftBtn, .controlGroupRightBtn, #timerDiskClickTarget").click(function (event) {
+                    var sClickID = $(event.target).attr("clickID");
+                    event.preventDefault();
+                    m_fnBtnClickCallback(sClickID);
+                });
+            };
+
+            this.setBreakLenDisplay = function (nBreakMins) {
+                $("#breakLenLbl").html("" + nBreakMins);
+            };
+
+            this.setSessionLenDisplay = function (nSessionMins) {
+                $("#sessionLenLbl").html("" + nSessionMins);
+            };
+
+            this.setTimerText = function (sText) {
+                $("#timerDiskTextMedium").html(sText);
+            };
+
+            this.setTimerCount = function (nSeconds) {
+                var nHours = Math.floor(nSeconds / 3600);
+                var nMins = Math.floor(nSeconds / 60) % 60;
+                var nSecs = nSeconds % 60;
+                var sCount = nMins.toString(10) + ":" + padLeft(nSecs.toString(10), 2, '0');
+
+                $("#timerDiskTextLarge").html((nHours > 0) ? nHours.toString(10) + ":" + padLeft(sCount, 5, '0') : sCount);
+            };
+
+            this.setTimerPercentFill = function (fPercent) {
+                var nDivHeight = $("#timerDiskInner").height();
+                var nTop = nDivHeight - Math.floor(nDivHeight * fPercent);
+
+                $("#timerDiskFiller").css({ "top": nTop + "px" });
+            };
+
+            this.setPauseIndicatorVisibility = function (bVisible) {
+                (bVisible) ? $("#timerDiskTextSmall").show() : $("#timerDiskTextSmall").hide();
+            };
+        };
+*/
+/*
+        //***************************************************************************
+        // Class:       PomoModel
+        // Description: Handles javascript timer, break and session durations, timer
+        //              mode (session or break), percent of break/session done, and 
+        //              pause status of timer.  Contains javascript timer.  The timer
+        //              duration is 1 second, and the timer function calls the
+        //              fnTimerUpdate callback provided when instance is created.
+        //***************************************************************************
+        var PomoModel = function (fnTimerUpdate) {
+            //Private vars
+            const TM_SESSION = 0;
+            const TM_BREAK = 1;
+
+            var m_nTimerMode = TM_SESSION;
+            var m_nSeconds = 0;
+            var m_nSessionLen = 1500;
+            var m_nBreakLen = 300;
+            var m_fPercentDone = 0.0;
+            var m_oTimer = null;
+            var m_bTimerPaused = true;
+            var m_fnTimerUpdate = fnTimerUpdate;
+
+            function timerFunc() {
+                m_nSeconds++;
+                
+                if (m_nTimerMode == TM_SESSION) {
+                    m_fPercentDone = m_nSeconds / m_nSessionLen;
+
+                    if (m_nSeconds > m_nSessionLen) {
+                        m_nSeconds = 0;
+                        m_nTimerMode = TM_BREAK;
+                        m_fPercentDone = 0.0;
+                    }
+                } else if (m_nTimerMode == TM_BREAK) {
+                    m_fPercentDone = m_nSeconds / m_nBreakLen;
+
+                    if (m_nSeconds > m_nBreakLen) {
+                        m_nSeconds = 0;
+                        m_nTimerMode = TM_SESSION;
+                        m_fPercentDone = 0.0;
+                    }
+                }
+
+                m_fPercentDone = (m_fPercentDone > 1.0) ? 1.0 : m_fPercentDone;
+                m_fnTimerUpdate();
+            }
+
+            //Public Methods
+            this.toggleTimerOnOff = function () {
+                if (m_bTimerPaused) {
+                    m_oTimer = setInterval(timerFunc, 1000);
+                } else {
+                    clearInterval(m_oTimer);
+                }
+
+                m_bTimerPaused = !m_bTimerPaused;
+            };
+
+            this.getSeconds = function () {
+                return m_nSeconds;
+            };
+
+            this.getPercentDone = function () {
+                return m_fPercentDone;
+            };
+
+            this.inSessionMode = function () {
+                return (m_nTimerMode == TM_SESSION);
+            };
+
+            this.getSessionLenMins = function () {
+                return Math.floor(m_nSessionLen / 60);
+            };
+
+            this.setSessionLenMins = function (nSessionLen) {
+                if (!m_bTimerPaused)
+                    return;
+
+                m_nSessionLen = Math.max(1, nSessionLen) * 60;
+
+                if (m_nTimerMode == TM_SESSION)
+                {
+                    m_nSeconds = Math.min(m_nSessionLen, m_nSeconds);
+                    m_fPercentDone = m_nSeconds / m_nSessionLen;
+                }
+            };
+
+            this.getBreakLenMins = function () {
+                return Math.floor(m_nBreakLen / 60);
+            };
+
+            this.setBreakLenMins = function (nBreakLen) {
+                if (!m_bTimerPaused)
+                    return;
+
+                m_nBreakLen = Math.max(1, nBreakLen) * 60;
+
+                if (m_nTimerMode == TM_BREAK)
+                {
+                    m_nSeconds = Math.min(m_nBreakLen, m_nSeconds);
+                    m_fPercentDone = m_nSeconds / m_nBreakLen;
+                }
+            };
+
+            this.isPaused = function () {
+                return m_bTimerPaused;
+            };
+        };
+*/
+/*
+        //***************************************************************************
+        // Class:       PomoController
+        // Description: Instantiates PomoView and PomoModel.  Clicks in view are 
+        //              handled via handleBtnClick, which is called by the view and
+        //              is passed a string ID identifying the control clicked.
+        //              Timer updates occur every second (when timer is active) via
+        //              handleTimerUpdate, which is called by the model object, which
+        //              also contains the javascript timer.
+        //***************************************************************************
+        var PomoController = function () {
+            //Public Methods
+            this.handleBtnClick = function (sClickID) {
+                switch (sClickID) {
+                    case "breakLen-":
+                        m_oModel.setBreakLenMins(m_oModel.getBreakLenMins() - 1);
+                        m_oView.setBreakLenDisplay(m_oModel.getBreakLenMins());
+                        m_oView.setTimerCount(m_oModel.getSeconds());
+                        m_oView.setTimerPercentFill(m_oModel.getPercentDone());
+                        break;
+
+                    case "breakLen+":
+                        m_oModel.setBreakLenMins(m_oModel.getBreakLenMins() + 1);
+                        m_oView.setBreakLenDisplay(m_oModel.getBreakLenMins());
+                        m_oView.setTimerPercentFill(m_oModel.getPercentDone());
+                        break;
+
+                    case "sessionLen-":
+                        m_oModel.setSessionLenMins(m_oModel.getSessionLenMins() - 1);
+                        m_oView.setSessionLenDisplay(m_oModel.getSessionLenMins());
+                        m_oView.setTimerCount(m_oModel.getSeconds());
+                        m_oView.setTimerPercentFill(m_oModel.getPercentDone());
+                        break;
+
+                    case "sessionLen+":
+                        m_oModel.setSessionLenMins(m_oModel.getSessionLenMins() + 1);
+                        m_oView.setSessionLenDisplay(m_oModel.getSessionLenMins());
+                        m_oView.setTimerPercentFill(m_oModel.getPercentDone());
+                        break;
+
+                    case "timerDisk":
+                        m_oModel.toggleTimerOnOff();
+                        m_oView.setPauseIndicatorVisibility(m_oModel.isPaused());
+                        break;
+                }
+            };
+
+            this.handleTimerUpdate = function () {
+                m_oView.setTimerText(m_oModel.inSessionMode() ? "Session" : "Break");
+                m_oView.setTimerCount(m_oModel.getSeconds());
+                m_oView.setTimerPercentFill(m_oModel.getPercentDone());
+            };
+
+            this.init = function () {
+                m_oView.init();
+            }
+
+            //Private Vars
+            var m_oView = new PomoView(this.handleBtnClick);
+            var m_oModel = new PomoModel(this.handleTimerUpdate);
+        };
+*/
+        var g_oPomoController = new PomoController();
+
+        $(function () {
+            g_oPomoController.init();
+        });
+    </script>
+</head>
+<body>
+    <nav class="navbar headerStyle">
+        <div style="float:none; text-align: center">
+            <h1>Pomodoro Timer</h1>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row noMarginPadding">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div id="centerContainer">
+                    <div id="controlRow">
+                        <div id="breakLenDiv">
+                            <p class="controlGroupTitle">BREAK LENGTH</p>
+                            <div class="controlGroupControls">
+                                <a class="controlGroupBtn controlGroupLeftBtn" id="breakLenMinusBtn" clickID="breakLen-" href="#">-</a>
+                                <p class="controlGroupTimeLbl" id="breakLenLbl">5</p>
+                                <a class="controlGroupBtn controlGroupRightBtn" id="breakLenPlusBtn" clickID="breakLen+" href="#">+</a>
+                            </div>
+                        </div>
+                        <div id="sessionLenDiv">
+                            <p class="controlGroupTitle">SESSION LENGTH</p>
+                            <div class="controlGroupControls">
+                                <a class="controlGroupBtn controlGroupLeftBtn" id="sessionLenMinusBtn" clickID="sessionLen-" href="#">-</a>
+                                <p class="controlGroupTimeLbl" id="sessionLenLbl">25</p>
+                                <a class="controlGroupBtn controlGroupRightBtn" id="sessionLenPlusBtn" clickID="sessionLen+" href="#">+</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="timerDiskOuter">
+                        <div id="timerDiskInner">
+                            <div id="timerDiskFiller"></div>
+                            <div id="timerDiskTextContainer">
+                                <p id="timerDiskTextMedium">Session</p>
+                                <p id="timerDiskTextLarge">0:00</p>
+                                <p id="timerDiskTextSmall">Paused</p>
+                            </div>
+                            <a id="timerDiskClickTarget" clickID="timerDisk" href="#"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       </div>
+    </div>
+
+    <nav class="footer navbar-fixed-bottom footerStyle">
+        <div style="float:none; text-align: center">
+            <p class="footer-text">Coded by Brian Denton.</p>
+        </div>
+    </nav>
+</body>
+</html>
+        

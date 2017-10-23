@@ -1,0 +1,215 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Calculator</title>
+    <link rel="stylesheet" href="bootstrap.min.css" />
+    <script src="jquery-1.10.2.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script src="CalcView.js"></script>
+    <script src="CalcModel.js"></script>
+    <script src="CalcController.js"></script>
+
+    <style>
+        body {
+            background-color: gray;
+            margin: 0px;
+        }
+
+        .noMarginPadding {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #calculatorBody {
+            background-color: #F0F0F0;
+            margin: 40px auto;
+            padding: 5px;
+            border-top: solid 8px white;
+            border-left: solid 8px white;
+            border-bottom: solid 8px #C0C0C0;
+            border-right: solid 8px #C0C0C0;
+            border-radius: 10px;
+            width: 476px;
+            box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        #numericDisplay {
+            margin: 5px;
+            padding: 5px;
+            padding-top: 2px;
+            background-color: #D0D0D0;
+            color: black;
+            width: 440px;
+            height: 60px;
+            border: solid 3px gray;
+            border-radius: 5px;
+        }
+
+        #memoryAndCurrentOp {
+            margin: 0px;
+            margin-bottom: 3px;
+            padding:0px;
+            clear: both;
+            width: 100%;
+            height: 15px;
+            overflow: hidden;
+        }
+
+        #memoryContents {
+            margin: 0px;
+            padding: 0px;
+            float: left;
+            font-weight: normal;
+            font-size: 14px;
+        }
+
+        #currentOp {
+            margin: 0px;
+            padding: 0px;
+            float: right;
+            font-weight: normal;
+            font-size: 14px;
+        }
+
+        #numericEntry {
+            margin: 0px;
+            padding: 0px;
+            height:25px;
+            width: 100%;
+            font-weight: normal;
+            font-size: 20pt;
+        }
+
+        .largeButtonLink {
+            border-top: solid 2px #909090;
+            border-left: solid 2px #909090;
+            border-bottom: solid 2px black;
+            border-right: solid 2px black;
+            border-radius: 5px;
+            display: block;
+            height: 80px;
+            width: 80px;
+            margin: 5px;
+            padding: 0px;
+            padding-top:13px;
+            color: white;
+            font-weight: bold;
+            font-size: 27pt;
+            float: left;
+         }
+
+        .largeButtonLink:link {
+            background-color: #505050;
+            color: white;
+            text-decoration: none;
+        }
+
+        .largeButtonLink:active {
+            background-color: #505050;
+            color: #808080;
+            text-decoration: none;
+        }
+
+        .largeButtonLink:visited {
+            background-color: #505050;
+            color: white;
+            text-decoration: none;
+        }
+
+        .largeButtonLink:hover {
+            background-color: #656565;
+            color: white;
+            text-decoration: none;
+        }
+
+        .footerStyle {
+            margin: 0px;
+            padding: 0px;
+            height: 25px;
+        }
+
+        .footer-text {
+            margin: 0;
+            padding: 0px;
+            padding-top: 3px;
+            color: white;
+        }
+    </style>
+
+    <script>
+        var g_oCalcController = new CalcController();
+    </script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row  noMarginPadding">
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                <div id="calculatorBody">
+                    <div id="numericDisplay">
+                        <div id="memoryAndCurrentOp">
+                            <p class="text-left" id="memoryContents">M:0</p>
+                            <p class="text-right" id="currentOp"></p>
+                        </div>
+                        <p class="text-right" id="numericEntry">0</p>
+                    </div>
+                    <div class="row noMarginPadding">
+                        <a class="largeButtonLink text-center" href="#">MC</a>
+                        <a class="largeButtonLink text-center" href="#">MS</a>
+                        <a class="largeButtonLink text-center" href="#">MR</a>
+                        <a class="largeButtonLink text-center" href="#">M+</a>
+                        <a class="largeButtonLink text-center" href="#">M-</a>
+                    </div>
+                    <div class="row noMarginPadding">
+                        <a class="largeButtonLink text-center" href="#">&#x2190;</a>
+                        <a class="largeButtonLink text-center" href="#">CE</a>
+                        <a class="largeButtonLink text-center" href="#">C</a>
+                        <a class="largeButtonLink text-center" href="#">&#x221A;</a>
+                        <a class="largeButtonLink text-center" href="#">1/x</a>
+                    </div>
+                    <div class="row noMarginPadding">
+                        <a class="largeButtonLink text-center" href="#">7</a>
+                        <a class="largeButtonLink text-center" href="#">8</a>
+                        <a class="largeButtonLink text-center" href="#">9</a>
+                        <a class="largeButtonLink text-center" href="#">&#x00F7;</a>
+                        <a class="largeButtonLink text-center" href="#">log</a>
+                    </div>
+                    <div class="row noMarginPadding">
+                        <a class="largeButtonLink text-center" href="#">4</a>
+                        <a class="largeButtonLink text-center" href="#">5</a>
+                        <a class="largeButtonLink text-center" href="#">6</a>
+                        <a class="largeButtonLink text-center" href="#">&#x00D7;</a>
+                        <a class="largeButtonLink text-center" href="#">&#x03C0;</a>
+                    </div>
+                    <div class="row noMarginPadding">
+                        <a class="largeButtonLink text-center" href="#">1</a>
+                        <a class="largeButtonLink text-center" href="#">2</a>
+                        <a class="largeButtonLink text-center" href="#">3</a>
+                        <a class="largeButtonLink text-center" href="#">-</a>
+                        <a class="largeButtonLink text-center" href="#">%</a>
+                    </div>
+                    <div class="row noMarginPadding">
+                        <a class="largeButtonLink text-center" href="#">0</a>
+                        <a class="largeButtonLink text-center" href="#">.</a>
+                        <a class="largeButtonLink text-center" href="#">&#x00B1;</a>
+                        <a class="largeButtonLink text-center" href="#">+</a>
+                        <a class="largeButtonLink text-center" href="#">=</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+            </div>
+       </div>
+    </div>
+
+    <nav class="footer navbar-fixed-bottom footerStyle">
+        <div style="float:none; text-align: center">
+            <p class="footer-text">Coded by Brian Denton.</p>
+        </div>
+    </nav>
+</body>
+</html>
+        
