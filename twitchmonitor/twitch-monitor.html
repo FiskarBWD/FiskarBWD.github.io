@@ -1,0 +1,502 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Twitch Monitor</title>
+    <script type="text/javascript" src="js/react.min.js"></script>
+    <script type="text/javascript" src="js/react-dom.min.js"></script>
+    <script type="text/javascript" src="js/browser.min.js"></script>    <!-- Babel core for converting JSX & ES6 to ES5 -->
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Cabin|Passion+One" rel="stylesheet">
+
+    <style>
+        html {
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        body {
+            background-color: black;
+            margin: 0px;
+            padding: 0px;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .componentDiv {
+            position: relative;
+            background-image: url('images/FtrBackground.png');
+            background-position: bottom left;
+            background-repeat: repeat-x;
+            margin: 0px;
+            padding: 0px;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-image: url('images/HdrBackground.png');
+            background-position: top left;
+            background-repeat: repeat-x;
+            height: 130px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .channelList {
+            padding: 0px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-bottom: 30px;
+            margin: 0;
+        }
+
+        .footerStyle {
+            position: absolute;
+            width: 100vw;
+            height: 20px;
+            left: 0px;
+            bottom: 0px;
+            margin: 0px;
+            padding: 0px;
+            padding-top: 3px;
+            text-align: center;
+        }
+
+        .footerText {
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 10px;
+            font-weight: normal;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        h1 {
+            color: white;
+            margin: 0;
+            padding: 0;
+            padding-top: 15px;
+            font-family: 'Passion One', Arial, sans-serif;
+            font-size: 40px;
+            font-weight: normal;
+        }
+
+        .channelDiv {
+            position: relative;
+            border: solid 2px #1b3e56;
+            border-radius: 6px;
+            display: block;
+            height: 64px;
+            margin: 0;
+            margin-top: 10px;
+            padding: 10px;
+            transition: background-color ease-in-out 250ms;
+            background-color: black;
+            color: white;
+            text-decoration: none;
+        }
+
+         .channelDiv:hover {
+            background-color: #02162d;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logoDivStyle {
+            float: left;
+            width: 10%;
+        }
+
+        .logoStyle {
+            border-color: white;
+            border-width: 2px;
+            border-style: solid;
+            border-radius: 30px;
+        }
+
+        .channelTitleAndDesc {
+            float: left;
+            width: 85%;
+            text-decoration: none;
+        }
+
+        .channelTitle {
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 16pt;
+            color: white;
+            padding: 0px;
+            padding-bottom: 10px;
+            margin: 0px;
+            text-decoration: none;
+        }
+
+        .channelDesc {
+            font-family: Arial, sans-serif;
+            font-weight: normal;
+            font-size: 12pt;
+            color: white;
+            padding: 0px;
+            margin: 0px;
+            text-decoration: none;
+        }
+
+        .removeLink {
+            position: absolute;
+            display: block;
+            width:26px;
+            height:26px;
+            right: -2px;
+            top: -2px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 16pt;
+            background-color: black;
+            border: solid 2px #1b3e56;
+            border-radius: 6px;
+            text-align: center;
+            color: #808080;
+            text-decoration: none;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .removeLink:hover {
+            color: #FFFFFF;
+        }
+
+        #inputForm {
+            height: 30px;
+            width: 244px;
+            padding: 0px;
+            margin: 0px auto;
+            margin-top: 10px;
+        }
+
+        #searchText {
+            padding: 0;
+            margin: 0;
+            color: #808080;
+            background-color: #021222;
+            border: 2px solid #808080;
+            height: 26px;
+            width: 200px;
+            float: left;
+            font-weight: bold;
+        }
+
+        #searchText:focus {
+            outline: none;
+        }
+
+        #searchLink {
+            display: block;
+            margin: 0px;
+            margin-left: 10px;
+            padding: 0px;
+            width: 30px;
+            height: 30px;
+            float: left;
+            background-image: url('./Images/searchBtnImg.png');
+            background-position: top left;
+            background-repeat: no-repeat;
+            background-color: black;
+            border: 2px solid gray;
+            border-radius: 6px;
+        }
+
+        #searchLink:hover {
+            background-image: url('./Images/searchBtnImgHover.png');
+            border: 2px solid white;
+       }
+
+        #messageDiv {
+            height: 12px;
+            width: 100%;
+            padding: 0px;
+            margin: 0px auto;
+            margin-top: 15px;
+        }
+
+        #messageText {
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+
+    <script type="text/babel">  //type tells Babel to transform below script.
+        function ListItem(props) {
+            return (
+                <div className="channelDiv">
+                    <a className="logoDivStyle"  href={props.channelURL} target="_blank">
+                        <img src={props.logoURL} alt="X" height="60" width="60" className="logoStyle" />
+                    </a>
+                    <a className="channelTitleAndDesc" href={props.channelURL} target="_blank">
+                        <p className="channelTitle">{props.channelName}</p>
+                        <p className="channelDesc">{props.channelText}</p>
+                    </a>
+                    <button className="removeLink" onClick={props.onClickRemove}>X</button>
+                </div>
+            );
+        }
+
+        class TwitchMonitor extends React.Component {
+            constructor() {
+                super();
+                this.state = {
+                    channelList: []
+                };
+            }
+
+            componentWillMount() {
+                var oChannels = (typeof(Storage) !== "undefined") ? this.getChannelsFromLocalStorage() : [];
+                console.log("compWM: " + oChannels);
+
+                if (oChannels.length == 0) {    //Use default list if no channels in local storage (or no local storage support)
+                    oChannels = ["freecodecamp", "ESL_SC2", "OgamingSC2", "cretetion", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
+                }
+
+                this.twitchQueryFromList(0, oChannels, this);
+            }
+
+            addChannel() {
+                var sChannel = document.getElementById("searchText").value.trim();
+                var oTestRegExp = /^[a-zA-Z0-9][\w]{2,24}$/;
+
+                if (sChannel.length > 0 && oTestRegExp.test(sChannel)) {
+                    //Update local storage
+                    if (typeof(Storage) !== "undefined") {  
+                        var oChannelNames = this.getChannelNamesFromState();
+                        oChannelNames.push(sChannel);
+                        this.saveChannelsToLocalStorage(oChannelNames);
+                    }
+
+                    //Get info for new channel using Twitch API
+                    var oChannels = [sChannel];
+                    this.twitchQueryFromList(0, oChannels, this);
+                }
+            }
+
+            onClickRemove(index) {
+                //Update local storage
+                if (typeof(Storage) !== "undefined") {
+                    var oChannelNames = this.getChannelNamesFromState();
+                    oChannelNames.splice(index, 1);
+                    console.log("remove: " + oChannelNames);
+                    this.saveChannelsToLocalStorage(oChannelNames);
+                    localStorage.removeItem("twitchChannel" + (oChannelNames.length));
+                }
+            
+                //Update state
+                var newList = this.state.channelList.slice();
+                newList.splice(index, 1);
+                this.setState({channelList: newList});
+            }
+
+            render() {
+                var listItems = [];
+                this.state.channelList.forEach((item, i) => {
+                    listItems.push(<ListItem channelName={item.channelName} channelText={item.channelText} logoURL={item.logoURL} channelURL={item.channelURL} onClickRemove={() => this.onClickRemove(i)} />)
+                });
+
+                return (
+                    <div className="componentDiv">
+                        <div className="header">
+                            <h1>Twitch Monitor</h1>
+                            <div id="inputForm">
+                                <input type="text" id="searchText"/>
+                                <button id="searchLink" onClick={() => this.addChannel()}></button>
+                            </div>
+                            <div id="messageDiv">
+                                <p id="messageText">To add a new channel, use form above.</p>
+                            </div>
+                        </div>
+                        <div className="channelList">
+                            {listItems}
+                        </div>
+                        <div className="footerStyle">
+                            <p className="footerText">Coded by Brian Denton</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            //***************************************************************************
+            // Description: Creates an array of twitch channel names from any key/value
+            //              pairs for this page found in local storage.
+            // Params:      None
+            // Returns:     Array object containing any twitch channel names (strings) 
+            //              found in local storage.  May be an empty array.
+            //***************************************************************************
+            getChannelsFromLocalStorage() {     
+                var i, sValue;
+                var oChannels = [];
+
+                for (i = 0; i < 20; i++) {
+                    sValue = localStorage.getItem("twitchChannel" + i);
+                    if (sValue == null)
+                        break;
+                    else
+                        oChannels.push(sValue);
+                }
+
+                return oChannels;
+            }
+
+            //***************************************************************************
+            // Description: Saves array of twitch channel names to local storage.  Each 
+            //              is given a key of the form 'twitchChannelN' where N is the
+            //              channel's index in oChannels.
+            // Params:      oChannels - Array containing channel names (strings).
+            // Returns:     None
+            //***************************************************************************
+            saveChannelsToLocalStorage(oChannels) {
+                var i;
+
+                for (i = 0; i < oChannels.length; i++) {
+                    localStorage.setItem("twitchChannel" + i, oChannels[i]);
+                }
+            }
+
+            //***************************************************************************
+            // Description: Creates array of channel names by extracting these names from
+            //              component state.
+            // Params:      None
+            // Returns:     Array of strings, may be empty.
+            //***************************************************************************
+            getChannelNamesFromState() {
+                var i, oChannelNames = [];
+
+                for (i = 0; i < this.state.channelList.length; i++) {
+                    oChannelNames.push(this.state.channelList[i].channelName);
+                }
+
+                return oChannelNames;
+            }
+
+            //***************************************************************************
+            // Description: This recursive function performs AJAX calls to the Twitch API
+            //              for each element in the oList array.
+            //
+            //              Each element of the oList array contains a channel name.
+            //              For each element, a query is first made for an active stream.
+            //              If none is found, then a query is made to get channel info.
+            //              Results (channel name, current game + stream name, logo
+            //              image, and channel URL) are placed into an object that is
+            //              appended onto oComponent.state.channalList[], which causes 
+            //              the component to redraw its view, showing an entry on the 
+            //              page for each element in this array.
+            //
+            //              If the twich API reports an error for the channel query, or
+            //              any error occurs with the AJAX calls, then an element is 
+            //              still appended onto oComponent.state.channalList[].  This
+            //              allows a channel entry for all entries in oList to be 
+            //              displayed on the page, which lets the user edit the list 
+            //              (remove channels via delete link in each).
+            // Params:      iList - Index into array of channel names.  Recursion stops
+            //                      when iList >= oList.length
+            //              oList - Array of channel names (strings).
+            //              oComponent - Component who's state contains a channelList
+            //                      array.  It can be empty, but must be present and
+            //                      not null.
+            // Returns:     None
+            //***************************************************************************
+            twitchQueryFromList(iList, oList, oComponent) {
+                var sURL = "https://wind-bow.glitch.me/twitch-api/streams/" + oList[iList] + "?callback=?"; //'callback=?' is for JSONP
+
+                $.getJSON(sURL, function (oData) {
+                    var sText, sLogoURL, sChannelURL;
+
+                    if (oData.hasOwnProperty('stream') && oData.stream != null && oData.stream.hasOwnProperty('channel')) {
+                        sText = oData.stream.channel.game + ": " + oData.stream.channel.status;
+                        sLogoURL = (oData.stream.channel.hasOwnProperty('logo')) ? oData.stream.channel.logo : "./images/xLogo.png";
+                        sChannelURL = oData.stream.channel.url;
+                        var oNewList = oComponent.state.channelList.slice();
+                        oNewList.push({ 
+                            channelName: oList[iList], 
+                            channelText: sText,
+                            logoURL: sLogoURL,
+                            channelURL: sChannelURL
+                        });
+                        oComponent.setState({channelList: oNewList});
+
+                        if (++iList < oList.length) {
+                            oComponent.twitchQueryFromList(iList, oList, oComponent);
+                        }
+                    } else {
+                        sURL = "https://wind-bow.glitch.me/twitch-api/channels/" + oList[iList] + "?callback=?";
+
+                        $.getJSON(sURL, function (oData) {
+                            var sText, sLogoURL, sChannelURL;
+
+                            if (oData.hasOwnProperty('error')) {    //FIX
+                                sLogoURL = "./Images/xLogo.png";
+                                sText = "Error: " + oData.error;
+                                sChannelURL = "#";
+                            } else if (oData.hasOwnProperty('logo') && oData.logo != null) { 
+                                sLogoURL = oData.logo;
+                                sText = "Offline";
+                                sChannelURL = "https://www.twitch.tv/" + oList[iList];
+                            } else {   //If logo url is missing/null, use default logo
+                                sLogoURL = "./images/xLogo.png";
+                                sText = "Offline";
+                                sChannelURL = "https://www.twitch.tv/" + oList[iList];
+                            }
+
+                            var oNewList = oComponent.state.channelList.slice();
+                            oNewList.push({
+                                channelName: oList[iList],
+                                channelText: sText,
+                                logoURL: sLogoURL,
+                                channelURL: sChannelURL
+                            });
+                            oComponent.setState({channelList: oNewList});
+
+                            if (++iList < oList.length) {
+                                oComponent.twitchQueryFromList(iList, oList, oComponent);
+                            }
+                        }).fail(function() {
+                            var oNewList = oComponent.state.channelList.slice();
+                            oNewList.push({
+                                channelName: oList[iList],
+                                channelText: "Error: AJAX call to Twitch API failed.",
+                                logoURL: "./images/xLogo.png",
+                                channelURL: "#"
+                            });
+                            oComponent.setState({channelList: oNewList});
+
+                            if (++iList < oList.length) {
+                                oComponent.twitchQueryFromList(iList, oList, oComponent);
+                            }
+                        });
+                    }
+                }).fail(function() {
+                    var oNewList = oComponent.state.channelList.slice();
+                    oNewList.push({
+                        channelName: oList[iList],
+                        channelText: "Error: AJAX call to Twitch API failed.",
+                        logoURL: "./images/xLogo.png",
+                        channelURL: "#"
+                    });
+                    oComponent.setState({channelList: oNewList});
+
+                    if (++iList < oList.length) {
+                        oComponent.twitchQueryFromList(iList, oList, oComponent);
+                    }
+                });
+            }
+        }
+
+        ReactDOM.render(
+            <TwitchMonitor />,
+            document.getElementById('container')
+        );
+    </script>
+</body>
+</html>
