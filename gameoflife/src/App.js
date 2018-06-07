@@ -81,9 +81,83 @@ class App extends Component {
   * by calling button handlers.
   */
   componentDidMount() {
-    window.addEventListener("resize", this.updateDimensions.bind(this));
+    let oControllerThumb = document.getElementById("controllerThumb");
+    console.log("Found Thumb");
+
+    oControllerThumb.addEventListener('touchstart', this.handleTouchStart, true);
+    oControllerThumb.addEventListener('touchmove', this.handleTouchMove, true);
+    oControllerThumb.addEventListener('touchend', this.handleTouchEnd, true);
+
+    window.addEventListener("resize", this.updateDimensions);
     this.handleSeedBtnClick();
     this.handleRunBtnClick();
+  }
+
+  /**
+  *
+  */
+  handleTouchStart = (event) => {
+    event.preventDefault();
+
+    if (event.targetTouches.length == 1) {
+      let touch = event.targetTouches[0];
+
+      if (typeof(this.cursorIntervalID) != undefined)
+        clearInterval(this.cursorIntervalID);
+
+      this.setState({
+                      lastMouseX: touch.pageX,
+                      lastMouseY: touch.pageY,
+                      boardCursorVisible: true
+                    });
+    }
+  }
+
+  /**
+  *
+  */
+  handleTouchMove = (event) => {
+    event.preventDefault();
+
+    if (event.targetTouches.length == 1) {
+      let dx, dy, newLeft, newTop, bcRow, bcCol, maxCol, maxRow;
+      let touch = event.targetTouches[0];
+
+      dx = touch.pageX - this.state.lastMouseX;
+      dy = touch.pageY - this.state.lastMouseY;
+
+      newLeft = (dx < 0) ? Math.max(this.state.controllerThumbLeft + dx, this.THUMB_LEFT_MIN) :
+                           Math.min(this.state.controllerThumbLeft + dx, this.THUMB_LEFT_MAX);
+      newTop = (dy < 0) ? Math.max(this.state.controllerThumbTop + dy, this.THUMB_TOP_MIN) :
+                          Math.min(this.state.controllerThumbTop + dy, this.THUMB_TOP_MAX);
+      bcCol = Math.floor((this.state.cols - 1) * ((newLeft - this.THUMB_LEFT_MIN) / (this.THUMB_LEFT_MAX - this.THUMB_LEFT_MIN)));
+      maxCol = this.state.cols - this.state.insertPatternData.cols;
+      bcCol = (bcCol > maxCol) ? maxCol : bcCol;
+      bcRow = Math.floor((this.state.rows - 1) * ((newTop - this.THUMB_TOP_MIN) / (this.THUMB_TOP_MAX - this.THUMB_TOP_MIN)));
+      maxRow = this.state.rows - this.state.insertPatternData.rows;
+      bcRow = (bcRow > maxRow) ? maxRow : bcRow;
+
+      this.setState({
+                      lastMouseX: touch.pageX,
+                      lastMouseY: touch.pageY,
+                      controllerThumbLeft: newLeft,
+                      controllerThumbTop: newTop,
+                      boardCursorRow: bcRow,
+                      boardCursorCol: bcCol
+                    });
+    }
+  }
+
+  /**
+  *
+  */
+  handleTouchEnd = (event) => {
+    event.preventDefault();
+
+    this.cursorIntervalID = setInterval(() => {
+      clearInterval(this.cursorIntervalID);
+      this.setState({ boardCursorVisible: false });
+    }, 2000);
   }
 
   /**
@@ -98,7 +172,7 @@ class App extends Component {
   * Called when browser window is resized.  Event lister for browser resize
   * event added in componentDidMount, which calls this function.
   */
-  updateDimensions() {
+  updateDimensions = () => {
     this.setState({innerWidth: window.innerWidth,
                    innerHeight: window.innerHeight});
   }
@@ -672,7 +746,7 @@ class App extends Component {
           <div className="controllerInner">
             <div style={{position:"absolute", top:"50px", left:"17px", width:"173px", height:"106px", border: "1px solid gray"}} />
             <div className="controllerThumbDot" style={thumbDotStyle} />
-            <div className="controllerThumb" style={thumbStyle} onMouseDown={this.handleMouseDownControllerThumb} />
+            <div className="controllerThumb" style={thumbStyle} onMouseDown={this.handleMouseDownControllerThumb} id="controllerThumb"/>
           </div>
         </div>
         <div className="insertSelectorOuter" style={insSelStyle}>
