@@ -82,7 +82,6 @@ class App extends Component {
   */
   componentDidMount() {
     let oControllerThumb = document.getElementById("controllerThumb");
-    console.log("Found Thumb");
 
     oControllerThumb.addEventListener('touchstart', this.handleTouchStart, true);
     oControllerThumb.addEventListener('touchmove', this.handleTouchMove, true);
@@ -94,78 +93,17 @@ class App extends Component {
   }
 
   /**
-  *
-  */
-  handleTouchStart = (event) => {
-    event.preventDefault();
-
-    if (event.targetTouches.length == 1) {
-      let touch = event.targetTouches[0];
-
-      if (typeof(this.cursorIntervalID) != undefined)
-        clearInterval(this.cursorIntervalID);
-
-      this.setState({
-                      lastMouseX: touch.pageX,
-                      lastMouseY: touch.pageY,
-                      boardCursorVisible: true
-                    });
-    }
-  }
-
-  /**
-  *
-  */
-  handleTouchMove = (event) => {
-    event.preventDefault();
-
-    if (event.targetTouches.length == 1) {
-      let dx, dy, newLeft, newTop, bcRow, bcCol, maxCol, maxRow;
-      let touch = event.targetTouches[0];
-
-      dx = touch.pageX - this.state.lastMouseX;
-      dy = touch.pageY - this.state.lastMouseY;
-
-      newLeft = (dx < 0) ? Math.max(this.state.controllerThumbLeft + dx, this.THUMB_LEFT_MIN) :
-                           Math.min(this.state.controllerThumbLeft + dx, this.THUMB_LEFT_MAX);
-      newTop = (dy < 0) ? Math.max(this.state.controllerThumbTop + dy, this.THUMB_TOP_MIN) :
-                          Math.min(this.state.controllerThumbTop + dy, this.THUMB_TOP_MAX);
-      bcCol = Math.floor((this.state.cols - 1) * ((newLeft - this.THUMB_LEFT_MIN) / (this.THUMB_LEFT_MAX - this.THUMB_LEFT_MIN)));
-      maxCol = this.state.cols - this.state.insertPatternData.cols;
-      bcCol = (bcCol > maxCol) ? maxCol : bcCol;
-      bcRow = Math.floor((this.state.rows - 1) * ((newTop - this.THUMB_TOP_MIN) / (this.THUMB_TOP_MAX - this.THUMB_TOP_MIN)));
-      maxRow = this.state.rows - this.state.insertPatternData.rows;
-      bcRow = (bcRow > maxRow) ? maxRow : bcRow;
-
-      this.setState({
-                      lastMouseX: touch.pageX,
-                      lastMouseY: touch.pageY,
-                      controllerThumbLeft: newLeft,
-                      controllerThumbTop: newTop,
-                      boardCursorRow: bcRow,
-                      boardCursorCol: bcCol
-                    });
-    }
-  }
-
-  /**
-  *
-  */
-  handleTouchEnd = (event) => {
-    event.preventDefault();
-
-    this.cursorIntervalID = setInterval(() => {
-      clearInterval(this.cursorIntervalID);
-      this.setState({ boardCursorVisible: false });
-    }, 2000);
-  }
-
-  /**
   * Called by React framework when this component is being removed from the DOM.
   * Removes the event listener added for the browser resize event.
   */
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
+
+    let oControllerThumb = document.getElementById("controllerThumb");
+
+    oControllerThumb.removeEventListener('touchstart', this.handleTouchStart, true);
+    oControllerThumb.removeEventListener('touchmove', this.handleTouchMove, true);
+    oControllerThumb.removeEventListener('touchend', this.handleTouchEnd, true);
   }
 
   /**
@@ -680,6 +618,79 @@ class App extends Component {
     event.preventDefault();
     document.removeEventListener('mouseup', this.handleMouseUp, true);
     document.removeEventListener('mousemove', this.handleMouseMove, true);
+    this.cursorIntervalID = setInterval(() => {
+      clearInterval(this.cursorIntervalID);
+      this.setState({ boardCursorVisible: false });
+    }, 2000);
+  }
+
+  /**
+  * Called when touch detected over controller thumb.  Starts mouse drag for
+  * contoller thumb.
+  * @param {obj} event Event object for touchstart event
+  */
+  handleTouchStart = (event) => {
+    event.preventDefault();
+
+    if (event.targetTouches.length == 1) {
+      let touch = event.targetTouches[0];
+
+      if (typeof(this.cursorIntervalID) != undefined)
+        clearInterval(this.cursorIntervalID);
+
+      this.setState({
+                      lastMouseX: touch.pageX,
+                      lastMouseY: touch.pageY,
+                      boardCursorVisible: true
+                    });
+    }
+  }
+
+  /**
+  * Called when touch move detected over controller thumb.  Moves controller
+  * thumb, and board cursor also, but not past board edges.
+  * @param {obj} event Event object for touchstart event
+  */
+  handleTouchMove = (event) => {
+    event.preventDefault();
+
+    if (event.targetTouches.length == 1) {
+      let dx, dy, newLeft, newTop, bcRow, bcCol, maxCol, maxRow;
+      let touch = event.targetTouches[0];
+
+      dx = touch.pageX - this.state.lastMouseX;
+      dy = touch.pageY - this.state.lastMouseY;
+
+      newLeft = (dx < 0) ? Math.max(this.state.controllerThumbLeft + dx, this.THUMB_LEFT_MIN) :
+                           Math.min(this.state.controllerThumbLeft + dx, this.THUMB_LEFT_MAX);
+      newTop = (dy < 0) ? Math.max(this.state.controllerThumbTop + dy, this.THUMB_TOP_MIN) :
+                          Math.min(this.state.controllerThumbTop + dy, this.THUMB_TOP_MAX);
+      bcCol = Math.floor((this.state.cols - 1) * ((newLeft - this.THUMB_LEFT_MIN) / (this.THUMB_LEFT_MAX - this.THUMB_LEFT_MIN)));
+      maxCol = this.state.cols - this.state.insertPatternData.cols;
+      bcCol = (bcCol > maxCol) ? maxCol : bcCol;
+      bcRow = Math.floor((this.state.rows - 1) * ((newTop - this.THUMB_TOP_MIN) / (this.THUMB_TOP_MAX - this.THUMB_TOP_MIN)));
+      maxRow = this.state.rows - this.state.insertPatternData.rows;
+      bcRow = (bcRow > maxRow) ? maxRow : bcRow;
+
+      this.setState({
+                      lastMouseX: touch.pageX,
+                      lastMouseY: touch.pageY,
+                      controllerThumbLeft: newLeft,
+                      controllerThumbTop: newTop,
+                      boardCursorRow: bcRow,
+                      boardCursorCol: bcCol
+                    });
+    }
+  }
+
+  /**
+  * Called when touch end detected over controller thumb.  Starts timer to hide
+  * board cursor.
+  * @param {obj} event Event object for touchstart event
+  */
+  handleTouchEnd = (event) => {
+    event.preventDefault();
+
     this.cursorIntervalID = setInterval(() => {
       clearInterval(this.cursorIntervalID);
       this.setState({ boardCursorVisible: false });
