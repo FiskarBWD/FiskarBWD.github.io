@@ -29,11 +29,6 @@ class App extends Component {
   constructor() {
     super();
 
-    this.THUMB_LEFT_MIN = -15;
-    this.THUMB_LEFT_MAX = 158;
-    this.THUMB_TOP_MIN = 18;
-    this.THUMB_TOP_MAX = 124;
-
     this.intervalID = undefined;
     this.cursorIntervalID = undefined;
 
@@ -59,8 +54,16 @@ class App extends Component {
       dlgSelInsPatState: DlgSelectInsertPattern.DS_HIDDEN,
       patternList: [],
       exportPatternStr: "",
+      controllerInnerSize: 210,
+      controllerBoxWidth: 173,
+      controllerBoxHeight: 106,
+      controllerBoxLeft: 17,
+      controllerBoxTop: 50,
+      controllerThumbRadius: 60,
       controllerThumbLeft: 73,
       controllerThumbTop: 73,
+      controllerDotX: 0.50,
+      controllerDotY: 0.50,
       lastMouseX: 0,
       lastMouseY: 0,
       insertPatternData: {
@@ -88,6 +91,7 @@ class App extends Component {
     oControllerThumb.addEventListener('touchend', this.handleTouchEnd, true);
 
     window.addEventListener("resize", this.updateDimensions);
+    this.updateDimensions();
     this.handleSeedBtnClick();
     this.handleRunBtnClick();
   }
@@ -111,8 +115,33 @@ class App extends Component {
   * event added in componentDidMount, which calls this function.
   */
   updateDimensions = () => {
-    this.setState({innerWidth: window.innerWidth,
-                   innerHeight: window.innerHeight});
+    let controllerInnerSize = Math.max(210, Math.floor(window.innerWidth * 0.175));
+    controllerInnerSize = Math.max(210, controllerInnerSize);
+    let controllerBoxWidth = Math.round(controllerInnerSize * (173.0 / 210.0)) + 3;
+    let controllerBoxHeight = Math.round(controllerInnerSize * (106.0 / 210.0)) + 3;
+    let controllerBoxLeft = Math.round(controllerInnerSize * (17.0 / 210.0));
+    let controllerBoxTop = Math.round(controllerInnerSize * (50.0 / 210.0));
+    let controllerThumbRadius = Math.round(controllerInnerSize * (30.0 / 210.0));
+    let maxBoardWidth = Math.round(Math.max(window.innerWidth, 1200) * (642.0 / 1200.0));
+    let boardCellSize = this.calcBoardCellSize(maxBoardWidth, this.state.cols, 2);
+
+    this.setState({
+                   innerWidth: window.innerWidth,
+                   innerHeight: window.innerHeight,
+                   cellSize: boardCellSize,
+                   controllerInnerSize: controllerInnerSize,
+                   controllerBoxWidth: controllerBoxWidth,
+                   controllerBoxHeight: controllerBoxHeight,
+                   controllerBoxLeft: controllerBoxLeft,
+                   controllerBoxTop: controllerBoxTop,
+                   controllerThumbRadius: controllerThumbRadius,
+                   controllerThumbLeft: controllerBoxLeft +
+                                        (Math.round(controllerBoxWidth * this.state.controllerDotX) -
+                                        (controllerThumbRadius + 2)),
+                   controllerThumbTop: controllerBoxTop +
+                                       (Math.round(controllerBoxHeight * this.state.controllerDotY) -
+                                       (controllerThumbRadius + 2))
+                 });
   }
 
   /**
@@ -122,36 +151,35 @@ class App extends Component {
   *   'BS_' constants defined in AppHeader.
   */
   handleBoardSizeChange = (newSize) => {
-    let rows, cols, cellSize, bcRow, bcCol;
+    let rows, cols, bcRow, bcCol;
 
     switch (newSize) {
       case AppHeader.BS_50x30:
         rows = 30;
         cols = 50;
-        cellSize = 12;
         break;
       case AppHeader.BS_75x45:
         rows = 45;
         cols = 75;
-        cellSize = 7;
         break;
       default:
         rows = 60;
         cols = 100;
-        cellSize = 5;
         break;
     }
 
+    let maxBoardWidth = Math.round(Math.max(window.innerWidth, 1200) * (642.0 / 1200.0));
+    let boardCellSize = this.calcBoardCellSize(maxBoardWidth, cols, 2);
     let cells = new Array(rows).fill().map(() => Array(cols).fill(false));
 
-    bcCol = Math.floor((cols - 1) * ((this.state.controllerThumbLeft - this.THUMB_LEFT_MIN) / (this.THUMB_LEFT_MAX - this.THUMB_LEFT_MIN)));
-    bcRow = Math.floor((rows - 1) * ((this.state.controllerThumbTop - this.THUMB_TOP_MIN) / (this.THUMB_TOP_MAX - this.THUMB_TOP_MIN)));
+    bcCol = Math.floor((cols - 1) * this.state.controllerDotX);
+    bcRow = Math.floor((rows - 1) * this.state.controllerDotY);
 
     this.setState({ boardSize: newSize,
                     rows: rows,
                     cols: cols,
                     cells: cells,
-                    cellSize: cellSize,
+                    cellSize: boardCellSize,
                     boardCursorRow: bcRow,
                     boardCursorCol: bcCol
                   });
@@ -275,7 +303,7 @@ class App extends Component {
   *   alpha-numeric characters (0-9, a-z, A-Z).
   */
   handleLSDlgSave = (patternName) => {
-    let patternData = this.gereratePatternSaveData(this.state.cells, this.state.rows,
+    let patternData = this.generatePatternSaveData(this.state.cells, this.state.rows,
                                                    this.state.cols);
     this.savePatternToLocalStorage(patternData, patternName);
     this.setState({dlgLoadSaveState: DlgLoadSave.DS_HIDDEN});
@@ -368,7 +396,7 @@ class App extends Component {
 
     this.handlePauseBtnClick();
 
-    let patternData = this.gereratePatternSaveData(this.state.cells, this.state.rows,
+    let patternData = this.generatePatternSaveData(this.state.cells, this.state.rows,
                                                    this.state.cols);
     for (i = 0; i < patternData.rows; i++) {
       patternHexStr += (patternData.cells[i] + "\r\n");
@@ -565,11 +593,11 @@ class App extends Component {
   * While moving the mouse, the position of the controller thumb is
   * moved to keep up, but is limited so the center dot does not leave
   * the rectangle.  The position of the board cursor is calculated from
-  * the position of the controller thumb.
+  * the position of the center dot.
   * @param {obj} event Javascript event object for mouse down event.
   */
   handleMouseMove = (event) => {
-    let x, y, dx, dy, newLeft, newTop, bcRow, bcCol, maxCol, maxRow;
+    let x, y, dx, dy, newX, newY, bcRow, bcCol, maxCol, maxRow;
     event.preventDefault();
 
     if (event.hasOwnProperty('clientX')) {
@@ -583,22 +611,29 @@ class App extends Component {
     dx = x - this.state.lastMouseX;
     dy = y - this.state.lastMouseY;
 
-    newLeft = (dx < 0) ? Math.max(this.state.controllerThumbLeft + dx, this.THUMB_LEFT_MIN) :
-                         Math.min(this.state.controllerThumbLeft + dx, this.THUMB_LEFT_MAX);
-    newTop = (dy < 0) ? Math.max(this.state.controllerThumbTop + dy, this.THUMB_TOP_MIN) :
-                        Math.min(this.state.controllerThumbTop + dy, this.THUMB_TOP_MAX);
-    bcCol = Math.floor((this.state.cols - 1) * ((newLeft - this.THUMB_LEFT_MIN) / (this.THUMB_LEFT_MAX - this.THUMB_LEFT_MIN)));
+    newX = (dx < 0) ? Math.max(this.state.controllerDotX + (dx / this.state.controllerBoxWidth), 0.0) :
+                      Math.min(this.state.controllerDotX + (dx / this.state.controllerBoxWidth), 1.0);
+    newY = (dy < 0) ? Math.max(this.state.controllerDotY + (dy / this.state.controllerBoxHeight), 0.0) :
+                      Math.min(this.state.controllerDotY + (dy / this.state.controllerBoxHeight), 1.0);
+
+    bcCol = Math.floor((this.state.cols - 1) * newX);
     maxCol = this.state.cols - this.state.insertPatternData.cols;
     bcCol = (bcCol > maxCol) ? maxCol : bcCol;
-    bcRow = Math.floor((this.state.rows - 1) * ((newTop - this.THUMB_TOP_MIN) / (this.THUMB_TOP_MAX - this.THUMB_TOP_MIN)));
+    bcRow = Math.floor((this.state.rows - 1) * newY);
     maxRow = this.state.rows - this.state.insertPatternData.rows;
     bcRow = (bcRow > maxRow) ? maxRow : bcRow;
 
     this.setState({
                     lastMouseX: x,
                     lastMouseY: y,
-                    controllerThumbLeft: newLeft,
-                    controllerThumbTop: newTop,
+                    controllerDotX: newX,
+                    controllerDotY: newY,
+                    controllerThumbLeft: this.state.controllerBoxLeft +
+                                         (Math.round(this.state.controllerBoxWidth * newX) -
+                                         (this.state.controllerThumbRadius + 2)),
+                    controllerThumbTop: this.state.controllerBoxTop +
+                                        (Math.round(this.state.controllerBoxHeight * newY) -
+                                        (this.state.controllerThumbRadius + 2)),
                     boardCursorRow: bcRow,
                     boardCursorCol: bcCol
                   });
@@ -655,28 +690,36 @@ class App extends Component {
     event.preventDefault();
 
     if (event.targetTouches.length == 1) {
-      let dx, dy, newLeft, newTop, bcRow, bcCol, maxCol, maxRow;
+      let dx, dy, newX, newY, bcRow, bcCol, maxCol, maxRow;
       let touch = event.targetTouches[0];
 
       dx = touch.pageX - this.state.lastMouseX;
       dy = touch.pageY - this.state.lastMouseY;
 
-      newLeft = (dx < 0) ? Math.max(this.state.controllerThumbLeft + dx, this.THUMB_LEFT_MIN) :
-                           Math.min(this.state.controllerThumbLeft + dx, this.THUMB_LEFT_MAX);
-      newTop = (dy < 0) ? Math.max(this.state.controllerThumbTop + dy, this.THUMB_TOP_MIN) :
-                          Math.min(this.state.controllerThumbTop + dy, this.THUMB_TOP_MAX);
-      bcCol = Math.floor((this.state.cols - 1) * ((newLeft - this.THUMB_LEFT_MIN) / (this.THUMB_LEFT_MAX - this.THUMB_LEFT_MIN)));
+
+      newX = (dx < 0) ? Math.max(this.state.controllerDotX + (dx / this.state.controllerBoxWidth), 0.0) :
+                        Math.min(this.state.controllerDotX + (dx / this.state.controllerBoxWidth), 1.0);
+      newY = (dy < 0) ? Math.max(this.state.controllerDotY + (dy / this.state.controllerBoxHeight), 0.0) :
+                        Math.min(this.state.controllerDotY + (dy / this.state.controllerBoxHeight), 1.0);
+
+      bcCol = Math.floor((this.state.cols - 1) * newX);
       maxCol = this.state.cols - this.state.insertPatternData.cols;
       bcCol = (bcCol > maxCol) ? maxCol : bcCol;
-      bcRow = Math.floor((this.state.rows - 1) * ((newTop - this.THUMB_TOP_MIN) / (this.THUMB_TOP_MAX - this.THUMB_TOP_MIN)));
+      bcRow = Math.floor((this.state.rows - 1) * newY);
       maxRow = this.state.rows - this.state.insertPatternData.rows;
       bcRow = (bcRow > maxRow) ? maxRow : bcRow;
 
       this.setState({
                       lastMouseX: touch.pageX,
                       lastMouseY: touch.pageY,
-                      controllerThumbLeft: newLeft,
-                      controllerThumbTop: newTop,
+                      controllerDotX: newX,
+                      controllerDotY: newY,
+                      controllerThumbLeft: this.state.controllerBoxLeft +
+                                           (Math.round(this.state.controllerBoxWidth * newX) -
+                                           (this.state.controllerThumbRadius + 2)),
+                      controllerThumbTop: this.state.controllerBoxTop +
+                                          (Math.round(this.state.controllerBoxHeight * newY) -
+                                          (this.state.controllerThumbRadius + 2)),
                       boardCursorRow: bcRow,
                       boardCursorCol: bcCol
                     });
@@ -702,27 +745,46 @@ class App extends Component {
   * @return Rendered React elements.
   */
   render() {
-    let controllerStyle = {
-      top: ((Math.max(this.state.innerHeight, App.APP_MIN_HEIGHT) - (230)) / 2) + "px"
+    //Calc size of current insertion pattern display (left side of screen) and
+    //size of cells for pattern shown within.
+    let insPatDispSize = Math.max(210, Math.floor(this.state.innerWidth * 0.175));
+    let insPatCellSize = (this.state.insertPatternData.dispColCount > this.state.insertPatternData.dispRowCount) ?
+                         Math.floor((insPatDispSize - 2) / this.state.insertPatternData.dispColCount) - 2 :
+                         Math.floor((insPatDispSize - 2) / this.state.insertPatternData.dispRowCount) - 2;
+    insPatCellSize = Math.max(insPatCellSize, this.state.insertPatternData.cellSize);
+
+    //Create styles for size of controller divs based on values calculated in
+    //updateDimensions for current viewport size.
+    let controllerOuterStyle = {
+      "border-top-left-radius": (Math.floor((this.state.controllerInnerSize + 20) / 2)) + "px",
+      "border-bottom-left-radius": (Math.floor((this.state.controllerInnerSize + 20) / 2)) + "px"
+    };
+
+    let controllerInnerStyle = {
+      width: this.state.controllerInnerSize + "px",
+      height: this.state.controllerInnerSize + "px",
+      "border-radius": (Math.floor(this.state.controllerInnerSize / 2)) + "px"
+    };
+
+    let controllerBoxStyle = {
+      top: this.state.controllerBoxTop + "px",
+      left: this.state.controllerBoxLeft + "px",
+      width: this.state.controllerBoxWidth + "px",
+      height: this.state.controllerBoxHeight + "px"
     };
 
     let thumbStyle = {
       left: this.state.controllerThumbLeft + "px",
-      top: this.state.controllerThumbTop + "px"
+      top: this.state.controllerThumbTop + "px",
+      width: (this.state.controllerThumbRadius * 2) + "px",
+      height: (this.state.controllerThumbRadius * 2) + "px",
+      "border-radius": (this.state.controllerThumbRadius + 2) + "px"
     };
 
     let thumbDotStyle = {
-      left: (this.state.controllerThumbLeft + 32) + "px",
-      top: (this.state.controllerThumbTop + 32) + "px"
+      left: (this.state.controllerBoxLeft + (Math.round(this.state.controllerBoxWidth * this.state.controllerDotX))) + "px",
+      top: (this.state.controllerBoxTop + (Math.round(this.state.controllerBoxHeight * this.state.controllerDotY))) + "px"
     };
-
-    let insSelStyle = {
-      top: ((Math.max(this.state.innerHeight, App.APP_MIN_HEIGHT) - 364) / 2) + "px"
-    };
-
-    let cdPadding = Math.round((210 - (2 + (this.state.insertPatternData.dispRowCount *
-                                            (this.state.insertPatternData.cellSize + 2)))) / 2);
-    let insPatDispStyle = { "padding-top": cdPadding + "px", height: (210 - cdPadding) + "px" };
 
     return (
       <div className="app">
@@ -732,50 +794,49 @@ class App extends Component {
                    simSpeedChanged={this.handleSimSpeedChange}
                    toroidalBoard={this.state.toroidalBoard}
                    toroidalBoardChanged={this.handleToroidalBoardChange}/>
-        <GameBoard cells={this.state.cells}
-                  rows={this.state.rows}
-                  cols={this.state.cols}
-                  cellSize={this.state.cellSize}
-                  innerWidth={this.state.innerWidth}
-                  simRunning={this.state.simRunning}
-                  generation={this.state.generation}
-                  boardCursorVisible={this.state.boardCursorVisible}
-                  boardCursorRow={this.state.boardCursorRow}
-                  boardCursorCol={this.state.boardCursorCol}
-                  boardCursorRows={this.state.insertPatternData.rows}
-                  boardCursorCols={this.state.insertPatternData.cols}
-                  handleCellClick={this.handleCellClick}
-                  handleRunClick={this.handleRunBtnClick}
-                  handlePauseClick={this.handlePauseBtnClick}
-                  handleClearClick={this.handleClearBtnClick}
-                  handleSeedClick={this.handleSeedBtnClick}
-                  handleSaveClick={this.handleShowSavePatternDlg}
-                  handleLoadClick={this.handleShowLoadPatternDlg}
-                  handleExportClick={this.handleShowExportPatternDlg}
-                  handleImportClick={this.handleShowImportPatternDlg}/>
-        <div className="controllerOuter" style={controllerStyle}>
-          <div className="controllerInner">
-            <div style={{position:"absolute", top:"50px", left:"17px", width:"173px", height:"106px", border: "1px solid gray"}} />
-            <div className="controllerThumbDot" style={thumbDotStyle} />
-            <div className="controllerThumb" style={thumbStyle} onMouseDown={this.handleMouseDownControllerThumb} id="controllerThumb"/>
+        <div className="app-content">
+          <div className="insertSelectorOuter">
+            <div className="insertPatternDisp">
+              <CellDisplay divWidth={insPatDispSize}
+                           divHeight={insPatDispSize}
+                           rows={this.state.insertPatternData.rows}
+                           cols={this.state.insertPatternData.cols}
+                           cells={this.state.insertPatternData.cells}
+                           cellSize={insPatCellSize}
+                           dispRowCount={this.state.insertPatternData.dispRowCount}
+                           dispColCount={this.state.insertPatternData.dispColCount}
+                           idStr={"insPatDisp"}
+              />
+            </div>
+            <input type="button" className="btn-unlit" style={{ "margin-top": "10px", "margin-bottom": "10px" }} value="Select" onClick={this.handleShowSelectInsPatDlg} />
+            <input type="button" className="btn-unlit" style={{ height: "80px", "font-size":"30px", "font-style": "bold" }} value="+/-" onClick={this.handleInsertPattern} />
           </div>
-        </div>
-        <div className="insertSelectorOuter" style={insSelStyle}>
-          <div className="insertPatternDisp" style={insPatDispStyle}>
-            <CellDisplay rows={this.state.insertPatternData.rows}
-                         cols={this.state.insertPatternData.cols}
-                         cells={this.state.insertPatternData.cells}
-                         cellSize={this.state.insertPatternData.cellSize}
-                         dispRowCount={this.state.insertPatternData.dispRowCount}
-                         dispColCount={this.state.insertPatternData.dispColCount}
-                         idStr={"insPatDisp"}
-            />
-          </div>
-          <div style={{ width: "100%", height: "45px", "text-align": "center",  "padding-top": "10px", "padding-bottom": "20px" }} >
-            <input type="button" className="btn-unlit" style={{ float: "none" }} value="Select" onClick={this.handleShowSelectInsPatDlg} />
-          </div>
-          <div style={{ width: "100%", height: "45px", "text-align": "center" }} >
-            <input type="button" className="btn-unlit" style={{ height: "80px", "font-size": "30px", "font-style": "bold", float: "none" }} value="+/-" onClick={this.handleInsertPattern} />
+          <GameBoard cells={this.state.cells}
+                    rows={this.state.rows}
+                    cols={this.state.cols}
+                    cellSize={this.state.cellSize}
+                    simRunning={this.state.simRunning}
+                    generation={this.state.generation}
+                    boardCursorVisible={this.state.boardCursorVisible}
+                    boardCursorRow={this.state.boardCursorRow}
+                    boardCursorCol={this.state.boardCursorCol}
+                    boardCursorRows={this.state.insertPatternData.rows}
+                    boardCursorCols={this.state.insertPatternData.cols}
+                    handleCellClick={this.handleCellClick}
+                    handleRunClick={this.handleRunBtnClick}
+                    handlePauseClick={this.handlePauseBtnClick}
+                    handleClearClick={this.handleClearBtnClick}
+                    handleSeedClick={this.handleSeedBtnClick}
+                    handleSaveClick={this.handleShowSavePatternDlg}
+                    handleLoadClick={this.handleShowLoadPatternDlg}
+                    handleExportClick={this.handleShowExportPatternDlg}
+                    handleImportClick={this.handleShowImportPatternDlg}/>
+          <div className="controllerOuter" style={controllerOuterStyle}>
+            <div className="controllerInner" style={controllerInnerStyle}>
+              <div className="controllerBox" style={controllerBoxStyle} />
+              <div className="controllerThumbDot" style={thumbDotStyle} />
+              <div className="controllerThumb" style={thumbStyle} onMouseDown={this.handleMouseDownControllerThumb} id="controllerThumb"/>
+            </div>
           </div>
         </div>
         <div className="app-footer">
@@ -871,6 +932,19 @@ class App extends Component {
   }
 
   /**
+  * Calculates board cell size (width and height, they are squares) based on
+  * current moximum board width, number of cell columns in the board, and
+  * minimum cell size.
+  * @param maxBoardWidth (number) maximum width of board in pixels
+  * @param cellCols (number) number of cell columns in the board
+  * @param minCellSize (number) minimum width/height of cell in pixels
+  */
+  calcBoardCellSize(maxBoardWidth, cellCols, minCellSize) {
+    let cellSize = Math.floor((maxBoardWidth - 2) / cellCols) - 2;
+    return Math.max(minCellSize, cellSize);
+  }
+
+  /**
   * Takes 2D array of cells and converts it to a series of hexadcimal
   * strings.  Dead zone around all living cells is determined, and
   * sub-pattern containing living cells is saved.  Object generated
@@ -885,7 +959,7 @@ class App extends Component {
   *   Note: array of strings is omitted if pattern is empty (rows =
   *   cols = 0).
   */
-  gereratePatternSaveData(cells, rows, cols) {
+  generatePatternSaveData(cells, rows, cols) {
     let r, c, iBit, nible, iRow;
     let rTop = Number.MAX_SAFE_INTEGER;
     let rBtm = -1;
@@ -1113,7 +1187,7 @@ class App extends Component {
   *     in hexadecimal.   Not present if rows = cols = 0.
   */
   readPatternListFromLocalStorage() {
-    let i, sKey, sValue, len, regexPatternName, patternObj, patternName;
+    let i, sKey, len, regexPatternName, patternObj, patternName;
     let patternList = [];
 
     if (typeof(Storage) !== "undefined") {

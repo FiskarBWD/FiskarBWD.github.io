@@ -21,7 +21,7 @@
  *
  * @exports AppHeader
  * @author Brian Denton
- * @version 1.0
+ * @version 2.0
  */
 
 import React, { Component } from 'react';
@@ -121,22 +121,30 @@ class AppHeader extends React.Component {
   * @return Rendered React elements.
   */
   render() {
-    let toroidalOpsDivStyle = {
-      width: "170px"
-    };
+//    let toroidalOpsDivStyle = {
+//      width: "170px"
+//    };
 
     let bsBtnClasses = [
-      (this.props.boardSize == AppHeader.BS_50x30) ? "btn-lit right-margin-10" : "btn-unlit right-margin-10",
-      (this.props.boardSize == AppHeader.BS_75x45) ? "btn-lit right-margin-10" : "btn-unlit right-margin-10",
+//      (this.props.boardSize == AppHeader.BS_50x30) ? "btn-lit right-margin-10" : "btn-unlit right-margin-10",
+//      (this.props.boardSize == AppHeader.BS_75x45) ? "btn-lit right-margin-10" : "btn-unlit right-margin-10",
+//      (this.props.boardSize == AppHeader.BS_100x60) ? "btn-lit" : "btn-unlit"
+      (this.props.boardSize == AppHeader.BS_50x30) ? "btn-lit" : "btn-unlit",
+      (this.props.boardSize == AppHeader.BS_75x45) ? "btn-lit" : "btn-unlit",
       (this.props.boardSize == AppHeader.BS_100x60) ? "btn-lit" : "btn-unlit"
     ];
     let ssBtnClasses = [
-      (this.props.simSpeed == AppHeader.SS_FAST) ? "btn-lit right-margin-10" : "btn-unlit right-margin-10",
-      (this.props.simSpeed == AppHeader.SS_MEDIUM) ? "btn-lit right-margin-10" : "btn-unlit right-margin-10",
+//      (this.props.simSpeed == AppHeader.SS_FAST) ? "btn-lit right-margin-10" : "btn-unlit right-margin-10",
+//      (this.props.simSpeed == AppHeader.SS_MEDIUM) ? "btn-lit right-margin-10" : "btn-unlit right-margin-10",
+//      (this.props.simSpeed == AppHeader.SS_SLOW) ? "btn-lit" : "btn-unlit"
+      (this.props.simSpeed == AppHeader.SS_FAST) ? "btn-lit" : "btn-unlit",
+      (this.props.simSpeed == AppHeader.SS_MEDIUM) ? "btn-lit" : "btn-unlit",
       (this.props.simSpeed == AppHeader.SS_SLOW) ? "btn-lit" : "btn-unlit"
     ];
     let tbBtnClasses = [
-      (this.props.toroidalBoard == AppHeader.TB_ON) ? "btn-lit right-margin-10" : "btn-unlit right-margin-10",
+//      (this.props.toroidalBoard == AppHeader.TB_ON) ? "btn-lit right-margin-10" : "btn-unlit right-margin-10",
+//      (this.props.toroidalBoard == AppHeader.TB_OFF) ? "btn-lit" : "btn-unlit",
+      (this.props.toroidalBoard == AppHeader.TB_ON) ? "btn-lit" : "btn-unlit",
       (this.props.toroidalBoard == AppHeader.TB_OFF) ? "btn-lit" : "btn-unlit",
     ];
 
@@ -149,30 +157,38 @@ class AppHeader extends React.Component {
             </div>
             <p className="app-header-text">A cellular automation devised by John Conway.  To learn more <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"  target="_blank">click here</a>.</p>
           </div>
-          <div className="app-header-option-div" style={toroidalOpsDivStyle}>
-            <h2>Toroidal Board:</h2>
-            <input type="button" className={tbBtnClasses[0]} value="On"
-              id="tb0" onClick={this.handleToroidalBoardClick}/>
-            <input type="button" className={tbBtnClasses[1]} value="Off"
-              id="tb1" onClick={this.handleToroidalBoardClick}/>
-          </div>
-          <div className="app-header-option-div">
-            <h2>Simulation Speed:</h2>
-            <input type="button" className={ssBtnClasses[0]} value="Fast"
-              id="ss0" onClick={this.handleSimSpeedClick}/>
-            <input type="button" className={ssBtnClasses[1]} value="Medium"
-              id="ss1" onClick={this.handleSimSpeedClick}/>
-            <input type="button" className={ssBtnClasses[2]} value="Slow"
-              id="ss2" onClick={this.handleSimSpeedClick} />
-          </div>
-          <div className="app-header-option-div">
-            <h2>Board Size:</h2>
-            <input type="button" className={bsBtnClasses[0]} value="50 x 30"
-              id="bs0" onClick={this.handleBoardSizeClick} />
-            <input type="button" className={bsBtnClasses[1]} value="75 x 45"
-              id="bs1" onClick={this.handleBoardSizeClick} />
-            <input type="button" className={bsBtnClasses[2]} value="100 x 60"
-              id="bs2" onClick={this.handleBoardSizeClick} />
+          <div className="app-header-options-div">
+            <div className="option-div" style={{ width: "190px" }}>
+              <h2>Toroidal Board:</h2>
+              <div className="option-div-btn-row">
+                <input type="button" className={tbBtnClasses[0]} value="On"
+                  id="tb0" onClick={this.handleToroidalBoardClick}/>
+                <input type="button" className={tbBtnClasses[1]} value="Off"
+                  id="tb1" onClick={this.handleToroidalBoardClick}/>
+              </div>
+            </div>
+            <div className="option-div">
+              <h2>Simulation Speed:</h2>
+              <div className="option-div-btn-row">
+                <input type="button" className={ssBtnClasses[0]} value="Fast"
+                  id="ss0" onClick={this.handleSimSpeedClick}/>
+                <input type="button" className={ssBtnClasses[1]} value="Medium"
+                  id="ss1" onClick={this.handleSimSpeedClick}/>
+                <input type="button" className={ssBtnClasses[2]} value="Slow"
+                  id="ss2" onClick={this.handleSimSpeedClick} />
+              </div>
+            </div>
+            <div className="option-div">
+              <h2>Board Size:</h2>
+              <div className="option-div-btn-row">
+                <input type="button" className={bsBtnClasses[0]} value="50 x 30"
+                  id="bs0" onClick={this.handleBoardSizeClick} />
+                <input type="button" className={bsBtnClasses[1]} value="75 x 45"
+                  id="bs1" onClick={this.handleBoardSizeClick} />
+                <input type="button" className={bsBtnClasses[2]} value="100 x 60"
+                  id="bs2" onClick={this.handleBoardSizeClick} />
+              </div>
+            </div>
           </div>
         </div>
       </div>

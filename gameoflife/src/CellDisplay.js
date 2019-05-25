@@ -1,19 +1,20 @@
 /**
  * @fileOverview React component for showing a grid of square cells.
- * The cellSize, pattern row/col count, and row/col count of the
- * entire display are included as props, so the pattern is centered
- * in the display.  Only live cells are rendered.
+ * The div size, cell size, pattern row/col count, and array of bools for
+ * the cells are included as props, so the pattern is centered in the
+ * display.  Only live cells are rendered.  This is used in the pattern
+ * selector (left side of main screen) and pattern selection dialog.
  *
  * This component has the following props:
  *
+ * divWidth  - Width of div, integer count in px
+ * divHeight - Height of div, integer count in px
  * cells - Required, 2D array of booleans, each true if cell is alive,
- *   flase if not.  Contains cells for bounding rectangle of pattern
+ *   false if not.  Contains cells for bounding rectangle of pattern
  *   only.  Size of this bounding rectangle defined by rows/cols.
  * rows - Required, Number of rows of cells in pattern.
  * cols - Required, Number of columns of cells in pattern.
- * cellSize - Required, Cell width/height in pixels
- * dispRowCount - Number of rows of cells in display
- * dispColCount - Number of columns of cells in display
+ * cellSize - Required, integer cell width/height in pixels
  * idStr - String used as prefix for cell IDs
  */
 
@@ -28,15 +29,17 @@ class CellDisplay extends React.Component {
   */
   render() {
     let row, col;
-    let divHeight = Math.round(((this.props.cellSize + 2) * this.props.dispRowCount) + 2);
     let cdStyle = {
-                    width: (((this.props.cellSize + 2) * this.props.dispColCount) + 2) + "px",
-                    height: divHeight + "px",
-                    margin: "0px auto"
+                    "min-width": this.props.divWidth + "px",
+                    "min-height": this.props.divHeight + "px",
+                    width: this.props.divWidth + "px",
+                    height: this.props.divHeight + "px"
                   };
     let cells = new Array();
-    let yTop = 2 + Math.floor(((this.props.dispRowCount - this.props.rows) / 2) * (this.props.cellSize + 2));
-    let xLeft = 2 + Math.floor(((this.props.dispColCount - this.props.cols) / 2) * (this.props.cellSize + 2));
+    let pxHeight = (this.props.rows * (this.props.cellSize + 2)) - 2;
+    let yTop = Math.floor((this.props.divHeight - pxHeight) / 2);
+    let pxWidth = (this.props.cols * (this.props.cellSize + 2)) - 2;
+    let xLeft = Math.floor((this.props.divWidth - pxWidth) / 2);
 
     for (row = 0; row < this.props.rows; row++) {
       for (col = 0; col < this.props.cols; col++) {
@@ -44,7 +47,7 @@ class CellDisplay extends React.Component {
           continue;
 
         cells.push(<Cell
-          row={row} 
+          row={row}
           col={col}
           x={xLeft + (col * (this.props.cellSize + 2))}
           y={yTop + (row * (this.props.cellSize + 2))}

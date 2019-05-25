@@ -99,8 +99,8 @@ class DlgImport extends React.Component {
           <p className="dlg-label" style={{"text-align": "justify", "margin-bottom": "10px"}}>If you are the recipient of an email/text containing pattern hexadecimal text, use this dialog to import the pattern into this site.  Paste the hexadecimal text into the textarea below, then press the Import button.</p>
           <textarea className="dlg-textarea" onChange={this.handlePatternHexChange}
             value={this.state.patternHex} />
-          <div className="dlg-btn-row" style={{ width: "165px" }}>
-            <input type="button" className="btn-unlit right-margin-5" value="Import"
+          <div className="dlg-btn-row" style={{ width: "170px" }}>
+            <input type="button" className="btn-unlit" value="Import"
               onClick={this.handleImport} />
             <input type="button" className="btn-unlit" value="Cancel"
               onClick={this.props.handleCancel} />

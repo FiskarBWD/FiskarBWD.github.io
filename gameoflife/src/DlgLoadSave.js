@@ -167,8 +167,8 @@ class DlgLoadSave extends React.Component {
             <div style={{ width: "100%", margin: "0", "margin-bottom": "10px", "text-align": "center"}} >
               <p className="dlg-error-txt">{this.state.errorText}</p>
             </div>
-            <div className="dlg-2btn-row">
-              <input type="submit" className="btn-unlit right-margin-5" value="Save" />
+            <div className="dlg-btn-row" style={{"width": "170px"}}>
+              <input type="submit" className="btn-unlit" value="Save" />
               <input type="button" className="btn-unlit" value="Cancel"
                 onClick={this.props.handleCancel} />
             </div>
@@ -189,9 +189,9 @@ class DlgLoadSave extends React.Component {
             <div style={{ width: "100%", margin: "0", "margin-bottom": "10px", "text-align": "center"}} >
               <p className="dlg-error-txt">{this.state.errorText}</p>
             </div>
-            <div className="dlg-3btn-row">
-              <input type="submit" className="btn-unlit right-margin-5" value="Load" />
-              <input type="button" className="btn-unlit right-margin-5" value="Delete"
+            <div className="dlg-btn-row" style={{"width": "260px"}}>
+              <input type="submit" className="btn-unlit" value="Load" />
+              <input type="button" className="btn-unlit" value="Delete"
                 onClick={this.handleDelete} />
               <input type="button" className="btn-unlit" value="Cancel"
                 onClick={this.props.handleCancel} />

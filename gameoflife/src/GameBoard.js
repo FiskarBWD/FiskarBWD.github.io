@@ -12,7 +12,6 @@
  * rows - Required, Number of rows of cells.
  * cols - Required, Number of columns of cells.
  * cellSize - Required, Cell width/height in pixels
- * innerWidth - Required, Width of browser window (excluding borders)
  * simRunning - Required, boolean, true if sim is running (Run button
  *   lit) or false if not (Pause button lit).
  * generation - Required, currnet integer generation of the sim.
@@ -52,8 +51,8 @@ class GameBoard extends React.Component {
     let cells = new Array();
 
     let runPauseBtnClasses = [
-      (this.props.simRunning) ? "btn-lit right-margin-5" : "btn-unlit right-margin-5",
-      (!this.props.simRunning) ? "btn-lit right-margin-5" : "btn-unlit right-margin-5"
+      (this.props.simRunning) ? "btn-lit" : "btn-unlit",
+      (!this.props.simRunning) ? "btn-lit" : "btn-unlit"
     ];
 
     wBoard = (this.props.cols * (this.props.cellSize + 2)) + 2;
@@ -62,12 +61,6 @@ class GameBoard extends React.Component {
     let boardStyle = {
       width: wBoard + "px",
       height: hBoard + "px"
-    }
-
-    let frameStyle = {
-      width: wBoard + "px",
-      height: (hBoard + 85) + "px",
-      left: ((Math.max(this.props.innerWidth, App.APP_MIN_WIDTH) - (wBoard + 22)) / 2) + "px"
     }
 
     let bcStyle = {
@@ -93,26 +86,25 @@ class GameBoard extends React.Component {
     }
 
     return (
-      <div className="board-frame" style={frameStyle}>
+      <div className="board-frame">
         <div className="boardBtnsRow">
           <input type="button" className={runPauseBtnClasses[0]}
             value="Run" onClick={this.props.handleRunClick} />
           <input type="button" className={runPauseBtnClasses[1]}
             value="Pause" onClick={this.props.handlePauseClick} />
-          <input type="button" className="btn-unlit right-margin-5"
+          <input type="button" className="btn-unlit"
             value="Clear" onClick={this.props.handleClearClick} />
-          <input type="button" className="btn-unlit right-margin-5"
+          <input type="button" className="btn-unlit"
             value="Seed" onClick={this.props.handleSeedClick} />
-          <input type="button" className="btn-unlit right-margin-5"
+          <input type="button" className="btn-unlit"
             value="Save" onClick={this.props.handleSaveClick} />
-          <input type="button" className="btn-unlit right-margin-5"
+          <input type="button" className="btn-unlit"
             value="Load" onClick={this.props.handleLoadClick} />
-          <input type="button" className="btn-unlit right-margin-5"
+          <input type="button" className="btn-unlit"
             value="Export" onClick={this.props.handleExportClick} />
           <input type="button" className="btn-unlit" value="Import"
             onClick={this.props.handleImportClick} />
         </div>
-        <div className="clear-floats" />
         <div className="boardGenerationsRow">
           <h2>Generation: {this.props.generation}</h2>
         </div>

@@ -323,7 +323,7 @@ class DlgSelectInsertPattern extends React.Component {
                  [false, false, false, false, false, false, false, false, false, false, true,  false, false, false, false, false, true,  false, false, false, false, false, false, false, true,  false, false, false, false, false, false, false, false, false, false, false ],
                  [false, false, false, false, false, false, false, false, false, false, false, true,  false, false, false, true,  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
                  [false, false, false, false, false, false, false, false, false, false, false, false, true,  true,  false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ] ],
-        cellSize: 3,
+        cellSize: 4,
         dispRowCount: 9,
         dispColCount: 36
       }
@@ -525,33 +525,27 @@ class DlgSelectInsertPattern extends React.Component {
     if (this.props.dlgState == DlgSelectInsertPattern.DS_HIDDEN)
       return null;
 
-    let cellSize = this.patternInfo[this.state.patternSelected].cellSize;
-    let rowCount = this.patternInfo[this.state.patternSelected].dispRowCount;
-    let cdPadding = Math.round((210 - (2 + (rowCount * (cellSize + 2)))) / 2);
-    let ipdStyle = { margin: "10px auto", "padding-top": cdPadding + "px", height: (210 - cdPadding) + "px" };
-
     return (
       <div className="dlg-modal-overlay">
         <div className="dlg-frame" onSubmit={this.handleSubmit}>
           <div className="dlg-title">
             <h2>Select Pattern</h2>
           </div>
-          <div className="insertPatternDisp" style={ipdStyle} >
-            <CellDisplay rows={this.patternInfo[this.state.patternSelected].rows}
+          <div className="insertPatternDisp" style={{"margin-bottom": "10px", "margin-right": "10px", "margin-left": "10px"}}>
+            <CellDisplay divWidth="580" divHeight="210"
+                         rows={this.patternInfo[this.state.patternSelected].rows}
                          cols={this.patternInfo[this.state.patternSelected].cols}
                          cells={this.patternInfo[this.state.patternSelected].cells}
                          cellSize={this.patternInfo[this.state.patternSelected].cellSize}
-                         dispRowCount={this.patternInfo[this.state.patternSelected].dispRowCount}
-                         dispColCount={this.patternInfo[this.state.patternSelected].dispColCount}
                          idStr={"insPatDlgDisp"}
             />
           </div>
           <PatternListBox patternList={this.patternListBoxInfo}
             selectedIndex={this.state.patternSelected}
             handleSelected={this.handlePatternSelectedInList}
-            listBoxHeight="230px"/>
-          <div className="dlg-2btn-row">
-            <input type="button" className="btn-unlit right-margin-5" value="Select"
+            listBoxHeight="240px"/>
+          <div className="dlg-btn-row" style={{"width": "170px"}}>
+            <input type="button" className="btn-unlit" value="Select"
               onClick={this.handleSelect} />
             <input type="button" className="btn-unlit" value="Cancel"
               onClick={this.props.handleCancel} />
